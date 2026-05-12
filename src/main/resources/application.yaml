@@ -1,0 +1,16 @@
+spring:
+   application:
+      name: cryptoOrchestrator
+server:
+   port: 8091
+   servlet:
+      context-path: /crypto
+   
+
+
+seguridad:
+   token:
+      header: Authorization
+      secret: ${TOKEN_SECRET:ultra_secret_token} ## Clave secreta Ãºnica por dominio/ambiente
+      expiration: ${TOKEN_EXPIRATION:30m}        ## Vencimientos de tokens: s for seconds, m for minutes, h for hours, d for days
+      refresh-expiration: ${REFRESHTOKEN_EXPIRATION:1h} 
