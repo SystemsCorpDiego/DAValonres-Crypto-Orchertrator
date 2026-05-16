@@ -3,7 +3,7 @@ package com.davalores.crypto.orchestrator.domain.model;
 public enum EPerfil {
 	
 	ROOT( (short)1, "ROOT"),
-	CLIENTE( (short)2, "CLIENTE"),
+	CLIENTE_ESCO( (short)2, "CLIENTE_ESCO"),	
 	ADMINISTRATIVO( (short)3, "ADMINISTRATIVO");
 	
 	private Short id;

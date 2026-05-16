@@ -18,9 +18,9 @@ public class GenerarAuthJwtTokenImpl implements GenerarAuthJwtToken {
 
     
     public GenerarAuthJwtTokenImpl(
-            @Value("${seguridad.token.secret}") String secret,
-            @Value("${seguridad.token.expiration}") Duration tokenExpiration,
-            @Value("${seguridad.token.refresh-expiration}") Duration refreshTokenExpiration) {
+            @Value("${login.token.secreto}") String secret,
+            @Value("${login.token.expiracion}") Duration tokenExpiration,
+            @Value("${login.tokenRefresco.expiracion}") Duration refreshTokenExpiration) {
         this.secret = secret;
         this.tokenExpiration = tokenExpiration;
         this.refreshTokenExpiration = refreshTokenExpiration;

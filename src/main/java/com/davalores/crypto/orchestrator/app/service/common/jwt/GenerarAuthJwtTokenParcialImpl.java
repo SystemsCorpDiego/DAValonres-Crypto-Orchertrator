@@ -15,8 +15,8 @@ public class GenerarAuthJwtTokenParcialImpl implements GenerarAuthJwtTokenParcia
     private final Duration tokenExpiration;
 
     public GenerarAuthJwtTokenParcialImpl(
-            @Value("${seguridad.token.secret}") String secret,
-            @Value("${seguridad.token.expiration}") Duration tokenExpiration) {
+            @Value("${login.token.secreto}") String secret,
+            @Value("${login.token.expiracion}") Duration tokenExpiration) {
         this.secret = secret;
         this.tokenExpiration = tokenExpiration;
     }

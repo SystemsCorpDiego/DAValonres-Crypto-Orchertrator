@@ -22,8 +22,9 @@ public class LoginOAuthController {
 	
 	private final LoginOAuthPortIn loginOAuth;
 	
-	public LoginOAuthController(LoginOAuthPortIn loginOAuth) {
+	public LoginOAuthController(LoginOAuthPortIn loginOAuth, LoginMapper mapper) {
 		this.loginOAuth = loginOAuth;
+		this.mapper = mapper;
 	}
 		
 	

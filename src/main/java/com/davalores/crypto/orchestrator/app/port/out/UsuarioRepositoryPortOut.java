@@ -1,5 +1,7 @@
 package com.davalores.crypto.orchestrator.app.port.out;
 
+import java.util.Optional;
+
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 
 public interface UsuarioRepositoryPortOut {
@@ -7,4 +9,5 @@ public interface UsuarioRepositoryPortOut {
 	
 	public Usuario get(Integer id);
 	
+	public Optional<Usuario> getByUsuario(String usuario);
 }

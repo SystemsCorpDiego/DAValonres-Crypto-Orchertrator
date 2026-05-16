@@ -1,5 +1,6 @@
 package com.davalores.crypto.orchestrator.app.service.common.jwt;
 
+
 public class JWTokenBo {
 
 	public final String token;
@@ -10,5 +11,14 @@ public class JWTokenBo {
 		this.tokenRefresco = tokenRefresco;
 	}
 
+	public String getToken() {
+		return token;
+	}
 
+	public String getTokenRefresco() {
+		return tokenRefresco;
+	}
+
+
+	
 }

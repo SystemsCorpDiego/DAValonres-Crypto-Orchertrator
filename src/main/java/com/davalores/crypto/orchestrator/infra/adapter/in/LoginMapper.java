@@ -8,7 +8,6 @@ import com.davalores.crypto.orchestrator.infra.adapter.in.dto.OauthTokenResponse
 @Mapper(componentModel = "spring")
 public interface LoginMapper {
 
-	OauthTokenResponseDto run(JWTokenBo dto);
-	
+	OauthTokenResponseDto run(JWTokenBo dto);	
 	
 }

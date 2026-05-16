@@ -18,6 +18,8 @@
 	<maven.compiler.target>21</maven.compiler.target>
 		
     <org.mapstruct.version>1.6.3</org.mapstruct.version>		
+    <mapstruct.version>1.6.3</mapstruct.version>
+    <lombok.version>1.18.46</lombok.version>
   </properties>
   
 	<dependencies>
@@ -25,12 +27,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!-- 
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		-->
+		<dependency>
+		    <groupId>com.microsoft.sqlserver</groupId>
+		    <artifactId>mssql-jdbc</artifactId>		    
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -124,5 +130,70 @@
 		
 		
 	</dependencies>  
-	
+
+	<build>
+		<finalName>cryptoOrchestrator</finalName>  
+		<plugins>
+		    <plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-compiler-plugin</artifactId>
+              <!--  <version>3.8.1</version>  -Ya viene esta version en el starter -->
+              <configuration>
+              
+              	<release>${java.version}</release>
+              	<!-- relese reeemplaza esto   
+		        <source>${java.version}</source>
+		        <target>${java.version}</target>-->
+                <encoding>${project.build.sourceEncoding}</encoding>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </path>
+		            <path>
+		                <groupId>org.projectlombok</groupId>
+		                <artifactId>lombok-mapstruct-binding</artifactId>
+		                <version>0.2.0</version>
+		            </path>
+                    
+                    <path>
+                        <groupId>org.mapstruct</groupId>
+                        <artifactId>mapstruct-processor</artifactId>
+                        <version>${mapstruct.version}</version>
+                    </path>
+                </annotationProcessorPaths>
+                <compilerArgs>
+                    <compilerArg>
+                        -Amapstruct.defaultComponentModel=spring
+                    </compilerArg>
+                    <compilerArg>
+                    	-Amapstruct.verbose=true
+                    </compilerArg>
+                    <compilerArg>
+                        -Amapstruct.unmappedTargetPolicy=IGNORE
+                    </compilerArg>
+                </compilerArgs>
+		      </configuration>
+		    </plugin>		
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+			        <source>${java.version}</source>
+			        <target>${java.version}</target>
+			        <!-- 
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+					-->
+				</configuration>
+			</plugin>
+			
+			
+		</plugins>
+	</build>	
 </project>

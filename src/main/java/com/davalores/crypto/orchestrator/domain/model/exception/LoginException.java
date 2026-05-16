@@ -1,7 +1,4 @@
-package com.davalores.crypto.orchestrator.app.service.login;
-
-import com.davalores.crypto.orchestrator.domain.model.exception.ErrorTypeEnum;
-import com.davalores.crypto.orchestrator.domain.model.exception.TicketRuntimeException;
+package com.davalores.crypto.orchestrator.domain.model.exception;
 
 public class LoginException extends TicketRuntimeException {
 
@@ -11,8 +8,10 @@ public class LoginException extends TicketRuntimeException {
         super(codigo, descripcion);
     }
 
+	@Override
 	public String getErrorType() {
 		return ErrorTypeEnum.LOGIN_ERROR.getType();
 	}
 	
+
 }

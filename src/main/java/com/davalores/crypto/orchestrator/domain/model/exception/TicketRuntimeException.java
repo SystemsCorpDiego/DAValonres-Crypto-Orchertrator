@@ -1,6 +1,6 @@
 package com.davalores.crypto.orchestrator.domain.model.exception;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 import lombok.Getter;
@@ -16,7 +16,7 @@ public abstract class TicketRuntimeException extends RuntimeException  implement
 	public String descripcion;
 
 	private Integer nroTicket;
-	private LocalDate date;
+	private LocalDateTime date;
 
 
 	public TicketRuntimeException(Exception e) {
@@ -83,7 +83,7 @@ public abstract class TicketRuntimeException extends RuntimeException  implement
 	private void generarTicket() {
 		Random randomNum = new Random();
         this.nroTicket = randomNum.nextInt(10000000);        
-        this.date = LocalDate.now();
+        this.date = LocalDateTime.now();
 	}
 
 	public String getTicketError() {		
