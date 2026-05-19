@@ -1,4 +1,4 @@
-package com.davalores.crypto.orchestrator.infra.adapter.in;
+package com.davalores.crypto.orchestrator.infra.adapter.in.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

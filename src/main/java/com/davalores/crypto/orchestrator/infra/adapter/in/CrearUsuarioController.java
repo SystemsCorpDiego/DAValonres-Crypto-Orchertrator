@@ -10,6 +10,7 @@ import com.davalores.crypto.orchestrator.app.port.in.usuario.CrearUsuarioPortIn;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearUsuarioDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.UsuarioDto;
+import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.UsuarioMapper;
 
 @RestController
 @RequestMapping("usuarios/")

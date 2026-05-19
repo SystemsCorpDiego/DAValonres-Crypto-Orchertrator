@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.davalores.crypto.orchestrator.app.port.out.UsuarioRepositoryPortOut;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
+import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
 
 @Repository
 public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut {
@@ -56,6 +57,13 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 	public Usuario saveConfirmarDfa(Usuario registro, boolean habilitar) {
 		// TODO Auto-generated method stub
 		registro.setDfa(habilitar);
+		if( !habilitar) {
+			registro.setDfaSemilla(null);			
+		} else {
+			if (registro.getDfaSemilla() == null)
+				throw new BusinessException("No se puede habilitar el DFA sin una semilla generada");
+		}
+		
 		registro = repository.save(registro);
 		
 		return registro;

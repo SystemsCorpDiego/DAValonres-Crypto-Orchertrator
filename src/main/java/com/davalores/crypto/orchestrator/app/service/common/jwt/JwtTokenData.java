@@ -15,4 +15,18 @@ public class JwtTokenData {
 	public boolean isType(TokenTipoEnum tipo) {
 		return this.tipo == tipo;
 	}
+
+	public TokenTipoEnum getTipo() {
+		return tipo;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public Integer getUsuarioId() {
+		return usuarioId;
+	}
+	
+	
 }

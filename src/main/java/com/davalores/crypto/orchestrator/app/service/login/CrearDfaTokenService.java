@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.CrearDfaTokenPortIn;
 import com.davalores.crypto.orchestrator.app.port.out.QrCodeServicePortOut;
+import com.davalores.crypto.orchestrator.app.service.common.jwt.JwtTokenData;
+import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
 import com.davalores.crypto.orchestrator.domain.model.DfaToken;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.infra.adapter.out.CypherServiceAdapterOut;
+import com.davalores.crypto.orchestrator.infra.adapter.out.JWTServiceAdapterOut;
 import com.davalores.crypto.orchestrator.infra.adapter.out.UsuarioJpaRepositoryAdapterOut;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,17 +24,21 @@ import lombok.extern.slf4j.Slf4j;
 public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 
 	private final String issuer;
+	private final String secreto;
 	private final CypherServiceAdapterOut cypherService;
 	private final QrCodeServicePortOut qrCodeService;
 	private final UsuarioJpaRepositoryAdapterOut usuarioRepository;
 	
+	
 	public CrearDfaTokenService(CypherServiceAdapterOut cypherService, 
 			UsuarioJpaRepositoryAdapterOut usuarioRepository, 
-			@Value("${login.dfa.issuer:DAV}") String issuer, QrCodeServicePortOut qrCodeService) {
+			@Value("${login.dfa.issuer:DAV}") String issuer, QrCodeServicePortOut qrCodeService,
+			@Value("${login.token.secreto}") String secreto) {
 		this.cypherService = cypherService;
 		this.qrCodeService = qrCodeService;
 		this.usuarioRepository = usuarioRepository;
 		this.issuer = issuer;
+		this.secreto = secreto;
 	}
 	
 	@Override
@@ -58,6 +65,18 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 		
 		return dfaToken;
 	}
+	
+	
+	@Override
+	public DfaToken run(String token) {
+
+		//JWTTokenData jwtTokenData = JWTServiceAdapterOut.parseToken(token, token, null)
+		
+		Optional<JwtTokenData> jwtTokenData = JWTServiceAdapterOut.parseToken(token, secreto, TokenTipoEnum.NORMAL);
+		
+		return run( jwtTokenData.get().getUsuarioId() );
+	}
+	
 
 	private String generateSecretKey() {
 		SecureRandom random = new SecureRandom();
