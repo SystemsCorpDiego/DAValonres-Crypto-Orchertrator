@@ -1,3 +1,9 @@
+server:
+   servlet:
+      context-path: /crypto
+   error:
+      whitelabel:
+         enabled: false
 spring:
    application:
       name: cryptoOrchestrator
@@ -14,10 +20,6 @@ spring:
             dialect: org.hibernate.dialect.SQLServerDialect
          database-platform: org.hibernate.dialect.SQLServerDialect
       show-sql: true
-server:
-   port: 8091
-   servlet:
-      context-path: /crypto
 apis:
    esco-bolsa:
       protocolo: http

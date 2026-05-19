@@ -11,6 +11,9 @@ import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
 import com.davalores.crypto.orchestrator.infra.adapter.out.JWTServiceAdapterOut;
 import com.davalores.crypto.orchestrator.infra.adapter.out.UsuarioJpaRepositoryAdapterOut;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class ConfirmarDFATokenService implements ConfirmarDFATokenPortIn {
 
@@ -25,11 +28,14 @@ public class ConfirmarDFATokenService implements ConfirmarDFATokenPortIn {
 	
 	@Override
     public void run(Integer usuarioId, boolean habilitar) {		
+		log.debug("run -> usuarioId: {} habilitar: {}", usuarioId, habilitar);
 		usuarioRepository.saveConfirmarDfa(usuarioId, habilitar);		
+		log.debug("run -> FIN");
 	}
 
 	@Override	
 	public void run(String token, boolean habilitar) {
+		log.debug("run -> token: {} habilitar: {}", token, habilitar);
 		Optional<JwtTokenData> jwtTokenData = JWTServiceAdapterOut.parseToken(token, secreto, TokenTipoEnum.NORMAL);
 		run( jwtTokenData.get().getUsuarioId(), habilitar );
 	}

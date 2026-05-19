@@ -14,7 +14,9 @@ import com.davalores.crypto.orchestrator.infra.adapter.in.dto.OauthTokenResponse
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.LoginMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth/login/")
 public class LoginOAuthController {
@@ -31,16 +33,19 @@ public class LoginOAuthController {
 	
 	@GetMapping
 	public ResponseEntity<OauthTokenResponseDto>  run(HttpServletRequest request) {
+		log.debug("run -> ");
 		OauthTokenResponseDto response = null;
 
 		//saco usuario y clave
 		String usuario = getUsuarioFromRequest(request);
 		String clave = getClaveFromRequest(request);
+		log.debug("run -> usuario: {} clave: {}", clave);
 		
 		//llamo al caso de uso 		
 		JWTokenBo dto = loginOAuth.run(usuario, clave);		
 		response = mapper.run(dto);
 		
+		log.debug("run -> response: {}", response);
 		return ResponseEntity.ok(response);
 	}
 	

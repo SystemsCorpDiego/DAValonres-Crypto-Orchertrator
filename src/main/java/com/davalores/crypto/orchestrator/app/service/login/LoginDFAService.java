@@ -39,6 +39,7 @@ public class LoginDFAService implements LoginDFAPortIn {
 	
 	@Override
 	public JWTokenBo run(String token, String dfaCode) {
+		log.debug("run -> token: {} dfaCode: {}", token, dfaCode);
 		JWTokenBo salida = null;
 
 		//Valida que sea TokenTipoEnum.AUTENTICACION_PARCIAL y recupera el usuarioId del claim
@@ -59,6 +60,7 @@ public class LoginDFAService implements LoginDFAPortIn {
 		// generar token definitivo
 		salida = generarAuthToken.run(usuario.get().getId(), usuario.get().getUsuario());			
 
+		log.debug("salida : {}", salida);
 		return salida;
 	} 
 

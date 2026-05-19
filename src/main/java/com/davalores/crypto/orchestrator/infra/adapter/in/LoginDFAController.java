@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.LoginDFAPortIn;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.JWTokenBo;
+import com.davalores.crypto.orchestrator.app.service.login.LoginDFAService;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.DFACodeDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.OauthTokenResponseDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.LoginMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("auth/login/dfa")
 public class LoginDFAController {
@@ -32,6 +35,7 @@ public class LoginDFAController {
 	
 	@PostMapping
 	public ResponseEntity<OauthTokenResponseDto>  run(HttpServletRequest request, @RequestBody DFACodeDto dto) {
+		log.debug("run -> dto: {}", dto);
 		OauthTokenResponseDto response = null;
 		//request: recupero token y saco usuario
 		String token = getAuthToken(request);
@@ -40,6 +44,7 @@ public class LoginDFAController {
 		JWTokenBo reg = loginDFA.run(token, dto.getDfaValor());
 		response = mapper.run(reg);
 		
+		log.debug("run -> response: {}", response);
 		//devuelvo nuevo token 
 		return ResponseEntity.ok(response);
 	}

@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.davalores.crypto.orchestrator.app.port.in.login.ConfirmarDFATokenPortIn;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/usuarios/dfa")
 public class ConfirmarDFATokenController {
@@ -26,22 +28,26 @@ public class ConfirmarDFATokenController {
 	
 	@PutMapping("/habilitar/FALSE")
 	public ResponseEntity<?> habilitar(HttpServletRequest request) {
-
-		Integer usuarioId = 1; //TODO: recuperar usuarioId del token del header Authorization
+		log.debug("run -> ");
 		String token = getAuthToken(request);
+		log.debug("run -> token: {}", token);
+
 		portIn.run(token, false);
 		
+		log.debug("run -> return: null");
 		return ResponseEntity.ok(null);
 	}
 
 	@PutMapping("/habilitar/TRUE")
 	public ResponseEntity<?> deshabilitar(HttpServletRequest request) {
+		log.debug("run -> ");
 
-		Integer usuarioId = 1; //TODO: recuperar usuarioId del token del header Authorization
 		String token = getAuthToken(request);
+		log.debug("run -> token: {}", token);
 		
 		portIn.run(token, true);
 		
+		log.debug("run -> return: null");
 		return ResponseEntity.ok(null);
 	}
 	

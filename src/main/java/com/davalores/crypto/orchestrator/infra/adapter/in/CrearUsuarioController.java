@@ -12,6 +12,9 @@ import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearUsuarioDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.UsuarioDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.UsuarioMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("usuarios/")
 public class CrearUsuarioController {
@@ -26,11 +29,13 @@ public class CrearUsuarioController {
 	
 	@PostMapping
 	public ResponseEntity<UsuarioDto> run(@RequestBody CrearUsuarioDto dto) {
+		log.debug("run -> dto: {}", dto);
 		
 		Usuario usuario = mapper.run(dto);
 		usuario = portIn.run(usuario);
 		UsuarioDto response = mapper.run(usuario);
 		
+		log.debug("run -> response: {}", response);
 		return ResponseEntity.ok(response);
 	}
 	

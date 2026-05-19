@@ -28,7 +28,7 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 	private final CypherServiceAdapterOut cypherService;
 	private final QrCodeServicePortOut qrCodeService;
 	private final UsuarioJpaRepositoryAdapterOut usuarioRepository;
-	
+
 	
 	public CrearDfaTokenService(CypherServiceAdapterOut cypherService, 
 			UsuarioJpaRepositoryAdapterOut usuarioRepository, 
@@ -43,7 +43,7 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 	
 	@Override
 	public DfaToken run(Integer idUsuario) {
-
+		log.debug("run -> idUsuario: {}", idUsuario);
 		//validar Usuario !!
 		Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
 		if ( usuario.isEmpty() )
@@ -63,13 +63,15 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 			log.error("ERROR qrCodeService.generar - e: {}", e.getMessage());
 		}
 		
+		log.debug("run -> salida - dfaToken: {}", dfaToken);
 		return dfaToken;
 	}
 	
 	
 	@Override
 	public DfaToken run(String token) {
-
+		log.debug("run -> token: {}", token);
+		
 		//JWTTokenData jwtTokenData = JWTServiceAdapterOut.parseToken(token, token, null)
 		
 		Optional<JwtTokenData> jwtTokenData = JWTServiceAdapterOut.parseToken(token, secreto, TokenTipoEnum.NORMAL);

@@ -16,8 +16,8 @@ import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import lombok.extern.slf4j.Slf4j;
 
 
-@Service
 @Slf4j
+@Service
 public class LoginOAuthService implements LoginOAuthPortIn {
 	//Este es como el LoginJWTImpl
 	
@@ -80,7 +80,7 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 			} else {
 				log.debug("login ESCO - OK - Usuario MiddleWare Inexistente");
 				token = Optional.of( generarToken.run(usuarioEsco.getId(), clave) );
-			}
+			} 
 		}
 		
 		if ( token.isPresent() ) {

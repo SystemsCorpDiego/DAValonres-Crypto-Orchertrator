@@ -12,7 +12,9 @@ import com.davalores.crypto.orchestrator.infra.adapter.in.dto.DfaTokenDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.DfaTokenMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/usuarios/dfa")
 public class CrearDFATokenController {
@@ -31,14 +33,15 @@ public class CrearDFATokenController {
 	
 	@PostMapping()
 	public ResponseEntity<DfaTokenDto> run(HttpServletRequest request) {
-
-		Integer usuarioId = 1; //TODO: recuperar usuarioId del token del header Authorization
+		log.debug("run -> ");
 		
 		String token = getAuthToken(request);
+		log.debug("run -> token: {}", token);		
 		
 		DfaToken dfaToken = portIn.run(token);
 		DfaTokenDto response = mapper.run(dfaToken);
 		
+		log.debug("run -> response: {}", response);		
 		return ResponseEntity.ok(response);
 	}
 
