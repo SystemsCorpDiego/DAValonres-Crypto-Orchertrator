@@ -19,15 +19,15 @@ public class EncriptadorClaveServiceAdapterOut implements EncriptadorClaveServic
     }
 
     @Override
-    public String run(String rawPassword) {
+    public String run(String clave) {
         log.debug("Encode password");
-        return encoder.encode(rawPassword);
+        return encoder.encode(clave);
     }
 
     @Override
-    public boolean validar(String password, String password1) {
+    public boolean validar(String clave, String claveEncriptada) {
         log.debug("Match passwords");
-        return encoder.matches(password, password1);
+        return encoder.matches(clave, claveEncriptada);
     }
 
 }

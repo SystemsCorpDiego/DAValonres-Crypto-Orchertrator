@@ -2,8 +2,8 @@ package com.davalores.crypto.orchestrator.app.port.out;
 
 public interface EncriptadorClaveServicePortOut {
 
-    String run(String rawPassword);
+    String run(String clave);
 
-    boolean validar(String password, String password1);
+    boolean validar(String clave, String claveEncriptada);
 
 }

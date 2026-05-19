@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.LoginOAuthPortIn;
+import com.davalores.crypto.orchestrator.app.port.out.EncriptadorClaveServicePortOut;
 import com.davalores.crypto.orchestrator.app.port.out.LoginEscoBolsaPortOut;
 import com.davalores.crypto.orchestrator.app.port.out.UsuarioRepositoryPortOut;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.JWTokenBo;
@@ -23,12 +24,15 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 	private final LoginEscoBolsaPortOut loginEscoBolsa;
 	private final UsuarioRepositoryPortOut usuarioRepository;
 	private final GenerarTokenService generarToken;
+	private final EncriptadorClaveServicePortOut encriptadorClaveService;
 	
 	public LoginOAuthService(LoginEscoBolsaPortOut loginEscoBolsa, UsuarioRepositoryPortOut usuarioRepository,
-			GenerarTokenService generarToken) {
+			GenerarTokenService generarToken, 
+			EncriptadorClaveServicePortOut encriptadorClaveService) {
 		this.loginEscoBolsa = loginEscoBolsa;
 		this.usuarioRepository = usuarioRepository;
 		this.generarToken = generarToken;
+		this.encriptadorClaveService = encriptadorClaveService;
 	}
 	
 	@Override
@@ -109,9 +113,11 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 			log.debug("Usuario {} sin clave en middleware", usuario.get().getDescripcion());
 			return false;
 		}
-			
-		if (!clave.equals(usuario.get().getClave().trim()))
+				
+		if ( !encriptadorClaveService.validar(clave, usuario.get().getClave() ) ) {
+			log.debug("loginMW - Usuario {} con clave INVALIDA en middleware", usuario.get().getDescripcion());
 			return false;
+		}
 		
 		return true;
 	}

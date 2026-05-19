@@ -48,7 +48,7 @@ public class JWTServiceAdapterOut implements JWTServicePortOut {
 		return Jwts.builder()
 			.claims(claims)
 			.subject(subject)
-			.issuedAt(expirationDate)
+			.issuedAt( new Date(System.currentTimeMillis()) )
 			.expiration(expirationDate)
 			.signWith(key)
 			.compact();
