@@ -41,7 +41,7 @@ public class GenerarDFASeedImpl implements GenerarDFASeed {
 		*/
 		//String username = userAuthenticationStorage.getUsername(usuarioId);
 		String secretKey = this.generateSecretKey();
-		String encryptedSecret = cypher.encrypt(secretKey);
+		String encryptedSecret = cypher.encriptar(secretKey);
 		
 		//userAuthenticationStorage.setTwoFactorAuthenticationSecret(usuarioId, encryptedSecret);
 		DFABo dfaBo = new DFABo.Builder()

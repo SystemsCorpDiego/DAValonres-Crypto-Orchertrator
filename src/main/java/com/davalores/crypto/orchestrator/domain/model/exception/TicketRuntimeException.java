@@ -75,6 +75,7 @@ public abstract class TicketRuntimeException extends RuntimeException  implement
 	
 	public TicketRuntimeException(String message) {
         super(message);
+        this.descripcion = message;
         
         generarTicket();
     }

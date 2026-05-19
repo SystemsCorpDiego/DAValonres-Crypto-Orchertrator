@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 
+import com.davalores.crypto.orchestrator.app.service.common.jwt.JwtTokenData;
+import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
 import com.davalores.crypto.orchestrator.infra.adapter.out.JWTServiceAdapterOut;
 
 public interface JWTServicePortOut {
@@ -20,4 +22,12 @@ public interface JWTServicePortOut {
 		return JWTServiceAdapterOut.TOKEN_CLAIM_TYPE;		
 	}
 		
+	public static boolean isTokenType(TokenTipoEnum expected, Map<String, Object> claims) {
+		return JWTServiceAdapterOut.isTokenType(expected, claims);
+	}
+	
+	public static Optional<JwtTokenData> parseToken(String token, String secret, TokenTipoEnum expectedType) {
+		return JWTServiceAdapterOut.parseToken(token, secret, expectedType);
+	}
+	
 }

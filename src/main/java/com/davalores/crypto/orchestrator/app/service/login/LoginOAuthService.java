@@ -33,7 +33,7 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 	
 	@Override
 	public JWTokenBo run(String usuaDescrip, String clave) {
-		log.debug("LoginOAuthService.run() - Input parameter -> usuaDescrip: {}", usuaDescrip);
+		log.debug("Input parameter -> usuaDescrip: {}", usuaDescrip);
 		Optional<JWTokenBo> token = Optional.empty();
 		
 		if ( usuaDescrip == null)
@@ -46,13 +46,13 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 		// 1) login al middleware
 		if (loginMW(usuario, clave)) {
 			token = generoToken(usuario, clave);
-			log.debug("LoginOAuthService.run() - login middleware - OK");
+			log.debug("login middleware - OK");
 		} else {
-			log.debug("LoginOAuthService.run() - login middleware - FAIL");
+			log.debug("login middleware - FAIL");
 		}
 		
 		if ( usuario.isPresent() && token.isPresent() ) {
-			log.debug("LoginOAuthService.run() - login middleware - Output parameter -> token {}", token.get());
+			log.debug("login middleware - Output parameter -> token {}", token.get());
 			return token.get();
 		}
 		 
@@ -74,13 +74,13 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 					token = Optional.of( generarToken.run(usuarioEsco.getId(), clave) );
 				}
 			} else {
-				log.debug("LoginOAuthService.run() - login ESCO - OK - Usuario MiddleWare Inexistente");
+				log.debug("login ESCO - OK - Usuario MiddleWare Inexistente");
 				token = Optional.of( generarToken.run(usuarioEsco.getId(), clave) );
 			}
 		}
 		
 		if ( token.isPresent() ) {
-			log.debug("LoginOAuthService.run() - login ESCO - Output parameter -> token {}", token.get());
+			log.debug("login ESCO - Output parameter -> token {}", token.get());
 			return token.get();
 		}				
 		
@@ -102,12 +102,18 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 	}
 	
 	private boolean loginMW(Optional<Usuario> usuario, String clave) {
-		if (usuario.isPresent()) {
-			if (clave.equals(usuario.get().getClave())) {
-				return true;
-			}
+		if (usuario.isEmpty())
+			return false;
+			
+		if (usuario.get().getClave() == null) {
+			log.debug("Usuario {} sin clave en middleware", usuario.get().getDescripcion());
+			return false;
 		}
-		return false;
+			
+		if (!clave.equals(usuario.get().getClave().trim()))
+			return false;
+		
+		return true;
 	}
 	
 	

@@ -19,6 +19,11 @@ public class JWTokenBo {
 		return tokenRefresco;
 	}
 
+	@Override
+	public String toString() {
+		return "JWTokenBo [token=" + token + ", tokenRefresco=" + tokenRefresco + "]";
+	}
+
 
 	
 }

@@ -1,3 +1,11 @@
+spring:
+   output:
+      ansi:
+         enabled: always
 logging:
    level:
-      root: DEBUG
+      root: ERROR
+      com:
+         davalores: TRACE
+   pattern:
+      console: "%clr(%d{mm:ss.SSS}){yellow} %clr(%.-3level) %clr(%-35.35logger{0}) %msg %n"

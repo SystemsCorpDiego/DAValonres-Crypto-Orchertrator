@@ -1,5 +1,6 @@
 package com.davalores.crypto.orchestrator.infra.adapter.in;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,10 +18,14 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("auth/login/dfa")
 public class LoginDFAController {
 
-	private LoginMapper mapper;
+	private final String tokenHeader; 
+	private final LoginMapper mapper;
 	private final LoginDFAPortIn loginDFA;
 	
-	public LoginDFAController(LoginDFAPortIn loginDFA) {
+	public LoginDFAController(LoginDFAPortIn loginDFA,
+			@Value("${login.token.header}") String tokenHeader, LoginMapper mapper) {
+		this.tokenHeader = tokenHeader;
+		this.mapper = mapper;
 		this.loginDFA = loginDFA;
 	}
 	
@@ -31,7 +36,7 @@ public class LoginDFAController {
 		String token = getAuthToken(request);
 		
 		//llamo al caso de uso  
-		JWTokenBo reg = loginDFA.run(token, dto.getValue());
+		JWTokenBo reg = loginDFA.run(token, dto.getDfaValor());
 		response = mapper.run(reg);
 		
 		//devuelvo nuevo token 
@@ -40,9 +45,11 @@ public class LoginDFAController {
 
 	private String getAuthToken(HttpServletRequest request) {
 		// recupero token del header Authorization
-		String auth = request.getHeader("Authorization");
-		String token = auth.split(" ")[1];
+		String auth = request.getHeader( tokenHeader );
+		//String token = auth.split(" ")[1];
+		String token = auth.replaceFirst("^Bearer ", "");
 		
 		return token;
+		
 	}
 }

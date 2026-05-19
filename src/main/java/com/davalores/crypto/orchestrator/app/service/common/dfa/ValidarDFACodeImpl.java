@@ -31,8 +31,8 @@ public class ValidarDFACodeImpl implements ValidarDFACode {
 				throw new BusinessException(DFAExceptionEnum.DFA_CODE_NULL.name(), errorMsg);
 			}
 		 */
-		
-		String decryptedSecret = cypher.decrypt(seed);
+		 
+		String decryptedSecret = cypher.desencriptar(seed);
 		if ( decryptedSecret.equals(""))
 			return false;
 		

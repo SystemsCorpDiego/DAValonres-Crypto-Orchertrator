@@ -24,11 +24,13 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private String descripcion;
+	private String usuario;
 	private String clave;
+	private String descripcion;
 	
 	private Boolean habilitado;
 	private Boolean dfa;
+	private String dfaSemilla;
 	
 	@ManyToMany
     @JoinTable(

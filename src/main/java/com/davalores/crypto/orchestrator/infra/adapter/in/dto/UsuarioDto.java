@@ -3,8 +3,10 @@ package com.davalores.crypto.orchestrator.infra.adapter.in.dto;
 import lombok.Data;
 
 @Data
-public class DFACodeDto {
+public class UsuarioDto {
 
-	private String dfaValor;
-
+	String id;
+	String usuario;
+	String descripcion;	
+	
 }

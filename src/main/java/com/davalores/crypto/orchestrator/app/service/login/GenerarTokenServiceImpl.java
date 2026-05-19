@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.davalores.crypto.orchestrator.app.port.out.JWTServicePortOut;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.JWTokenBo;
+import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
 
 @Component
 public class GenerarTokenServiceImpl implements GenerarTokenService {

@@ -31,12 +31,12 @@ public class CypherServiceAdapterOut implements CypherServicePortOut {
 	private IvParameterSpec iv;
 
 	public CypherServiceAdapterOut(@Value("${auth.2fa.password:}") String password) {
-		this.secretKey = this.generateEncryptionKey(password, SALT);
+		this.secretKey = this.generarEncriptacionKey(password, SALT);
 		this.iv = this.generateIv();
 	}
 
 	@Override
-	public String encrypt(String input) {
+	public String encriptar(String input) {
 		byte[] cypherText = new byte[0];
 		try {
 			Cipher cypher = Cipher.getInstance(ALGORITHM);
@@ -50,7 +50,7 @@ public class CypherServiceAdapterOut implements CypherServicePortOut {
 	}
 
 	@Override
-	public String decrypt(String cypherText) {
+	public String desencriptar(String cypherText) {
 		byte[] plainText = new byte[0];
 		try {
 			Cipher cypher = Cipher.getInstance(ALGORITHM);
@@ -63,7 +63,7 @@ public class CypherServiceAdapterOut implements CypherServicePortOut {
 		return new String(plainText);
 	}
 
-	private SecretKey generateEncryptionKey(String password, String salt) {
+	private SecretKey generarEncriptacionKey(String password, String salt) {
 		SecretKey secret = null;
 		try {
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");

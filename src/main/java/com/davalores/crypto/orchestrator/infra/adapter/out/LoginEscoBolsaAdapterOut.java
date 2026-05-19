@@ -67,19 +67,19 @@ public class LoginEscoBolsaAdapterOut implements LoginEscoBolsaPortOut {
 		
 		ResponseEntity<String> response;
 		try {
-			log.debug("LoginRipioAdapterOut() - buildUrl(): " + buildUrl());
+			log.debug("buildUrl(): " + buildUrl());
 			response = restTemplate.postForEntity(buildUrl(), request, String.class);
-			log.debug("LoginRipioAdapterOut() - response: " + response.toString());
+			log.debug("response: " + response.toString());
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
-		    log.error("LoginRipioAdapterOut() - Resource not found: " + e.getMessage());		    
+		    log.error("Resource not found: " + e.getMessage());		    
 		    throw new LoginException(HttpStatus.NOT_FOUND.toString(), "CotizarRipioAdapterOut() - Resource not found: " + e.getMessage() );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
-			log.error("LoginRipioAdapterOut() - HTTP Error: " + e.getStatusCode());
+			log.error("HTTP Error: " + e.getStatusCode());
 			throw new LoginException("4xx / 5xx", "CotizarRipioAdapterOut() - HTTP Error: " + e.getMessage() );
 		} catch (Exception e) {
-			log.error("LoginRipioAdapterOut() - ERROR-INESPERADO: " + e.toString());
+			log.error("ERROR-INESPERADO: " + e.toString());
 			throw new LoginException("ERROR-INESPERADO", "CotizarRipioAdapterOut() - Error en restTemplate: " + e.toString());
 		}
 		
@@ -97,10 +97,10 @@ public class LoginEscoBolsaAdapterOut implements LoginEscoBolsaPortOut {
 			
 			return usuarioEsco;			
 		} catch (JsonMappingException e) {
-			log.error("LoginRipioAdapterOut() - JsonMappingException: " + e.getMessage());
+			log.error("JsonMappingException: " + e.getMessage());
 			throw new LoginException("Error al mapear el JSON a TokenDto", e.toString());
 		} catch (JsonProcessingException e) {
-			log.error("LoginRipioAdapterOut() - JsonProcessingException: " + e.getMessage());
+			log.error("JsonProcessingException: " + e.getMessage());
 			throw new LoginException("Error al procesar el JSON", e.toString());
 		}
 		

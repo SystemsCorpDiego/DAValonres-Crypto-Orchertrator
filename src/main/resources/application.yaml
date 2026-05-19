@@ -27,7 +27,12 @@ apis:
          login: /api/v9/login
 login:
    token:
+      header: Authorization
       secreto: Scre-to.159-AuZ-tero.753xFRD345dfr#456x
-      expiracion: 500
+      expiracion: 600000 #milisegundos
+      isuer: DAValores
    tokenRefresco:
-      expiracion: 500
+      expiracion: 1200000 
+   dfa:
+      issuer: DAValores
+      password: Dfa-to.159-AuZ-tero.753xFRD345dfr#456x

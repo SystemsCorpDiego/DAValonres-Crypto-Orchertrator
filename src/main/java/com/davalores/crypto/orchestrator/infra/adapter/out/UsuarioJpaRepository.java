@@ -8,6 +8,6 @@ import com.davalores.crypto.orchestrator.domain.model.Usuario;
 
 public interface UsuarioJpaRepository extends JpaRepository<Usuario, Integer> {
 
-	Optional<Usuario> findByDescripcion(String usuario);	
+	Optional<Usuario> findByUsuario(String usuario);	
 
 }
