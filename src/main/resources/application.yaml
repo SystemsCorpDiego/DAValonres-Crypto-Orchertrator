@@ -33,7 +33,8 @@ apis:
         dominio: localhost:8092
         urls:
            cliente-alta: /cripto-provider/ripio/cliente/
-           cotizacion-alta: /cripto-provider/ripio/cotizacion/			
+           cotizacion-alta: /cripto-provider/ripio/cotizacion/
+           operacion-alta: /cripto-provider/ripio/operacion/
 login:
    token:
       header: Authorization

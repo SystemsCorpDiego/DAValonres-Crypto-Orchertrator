@@ -1,7 +1,8 @@
 package com.davalores.crypto.orchestrator.domain.model;
 
-public class Transaccion {
+public class Operacion {
 	String id; 				// UUID de cryptoOrchestrator (DA Valores)
+	
 	String idProvider; 		// UUID4 - Ident del proveedor (Ripio)
 	
 	String estado; 			// "RECHA_BUY_DAV"  => estado DA Valores - OpBuyApproval Ripsa Rechaza (operacion=BUY)
@@ -14,7 +15,9 @@ public class Transaccion {
 	String operacion;       // "BUY" o "SELL"   => informado por Ripio (RipioWebHookMessageOpResultDto.op_type)
 	String idClient;        // PK del cliente en DA Valores 
 	
-	//TODO: Cuando se analice VisualBolsa vemos que datos registramos de las transacciones RESERVA/EXTRACCION y DEPOSITO.-
+	
+	//TODO: Cuando se analice VisualBolsa vemos que datos registramos de las transacciones 
+	// RESERVA/EXTRACCION y DEPOSITO.-
 	
 	
 	public String getId() {

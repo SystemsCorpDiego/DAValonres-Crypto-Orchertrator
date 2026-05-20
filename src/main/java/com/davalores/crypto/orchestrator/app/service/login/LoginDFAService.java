@@ -18,8 +18,8 @@ import com.davalores.crypto.orchestrator.domain.model.exception.BusinessExceptio
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
+@Service
 public class LoginDFAService implements LoginDFAPortIn {
 
 	private final String secreto;
