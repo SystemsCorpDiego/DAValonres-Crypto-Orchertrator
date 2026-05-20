@@ -19,4 +19,6 @@ public interface UsuarioRepositoryPortOut {
 	public Usuario saveConfirmarDfa(Usuario registro, boolean habilitar);
 	public Usuario saveConfirmarDfa(Integer id, boolean habilitar);
 	
+	public Usuario saveRipioId(Usuario registro, String ripioId);
+	
 }

@@ -108,4 +108,14 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 		return usuario;
 	}
 		
+	
+	@Override
+	public Usuario saveRipioId(Usuario registro, String ripioId) {
+		UsuarioEntity reg = mapper.run(registro);
+		reg.setRipioId(ripioId);
+		reg = repository.save(reg);
+
+		registro = mapper.run(reg);
+		return registro;
+	}
 }

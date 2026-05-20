@@ -27,6 +27,13 @@ apis:
       api-version: 9
       urls:
          login: /api/v9/login
+   crypto-provider:
+      ripio:
+        protocolo: http
+        dominio: localhost:8092
+        urls:
+           cliente-alta: /cripto-provider/ripio/cliente/
+           cotizacion-alta: /cripto-provider/ripio/cotizacion/			
 login:
    token:
       header: Authorization
