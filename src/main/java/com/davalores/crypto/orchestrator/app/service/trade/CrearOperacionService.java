@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.davalores.crypto.orchestrator.app.port.in.trade.CrearOperacionPortIn;
 import com.davalores.crypto.orchestrator.app.port.out.CrearOperacionRipioPortOut;
 import com.davalores.crypto.orchestrator.app.port.out.JWTServicePortOut;
+import com.davalores.crypto.orchestrator.app.port.out.OperacionRepositoryPortOut;
 import com.davalores.crypto.orchestrator.app.port.out.UsuarioRepositoryPortOut;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.JwtTokenData;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
@@ -24,12 +25,14 @@ public class CrearOperacionService implements CrearOperacionPortIn {
 
 	private final String secreto;
 	private final UsuarioRepositoryPortOut usuarioRepository;
+	private final OperacionRepositoryPortOut operacionRepository;
 	private final CrearOperacionRipioPortOut crearOperacionRipioPortOut;
 	
 	public CrearOperacionService(@Value("${login.token.secreto}") String secreto, 
-			UsuarioRepositoryPortOut usuarioRepository, CrearOperacionRipioPortOut crearOperacionRipioPortOut) {
+			UsuarioRepositoryPortOut usuarioRepository, CrearOperacionRipioPortOut crearOperacionRipioPortOut, OperacionRepositoryPortOut operacionRepository) {
 		this.secreto = secreto;
 		this.usuarioRepository = usuarioRepository;
+		this.operacionRepository = operacionRepository;
 		this.crearOperacionRipioPortOut = crearOperacionRipioPortOut;
 	}
 	
@@ -50,16 +53,11 @@ public class CrearOperacionService implements CrearOperacionPortIn {
 		
 		if ( usuario.getRipioId() == null )
 			throw new BusinessException("El usuario no tiene asociado un RipioId");
-		
-		
 		dto.setRipioId(usuario.getRipioId());
 
 		Operacion operacion = crearOperacionRipioPortOut.run(dto);
 		
-		
-
-		//TODO: GRABAR en base de datos la OPERACION!!
-		
+		operacion = operacionRepository.save(operacion);
 		
 		return operacion;
 	}

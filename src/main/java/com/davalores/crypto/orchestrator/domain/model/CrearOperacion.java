@@ -9,7 +9,7 @@ public class CrearOperacion {
 	private Integer usuarioId;
 	private String ripioId;
 	
-	private Integer cotizacionId;
+	private String cotizacionId;
 	private BigDecimal cantidad;
 	
 	
@@ -31,10 +31,12 @@ public class CrearOperacion {
 	public void setRipioId(String ripioId) {
 		this.ripioId = ripioId;
 	}
-	public Integer getCotizacionId() {
+
+
+	public String getCotizacionId() {
 		return cotizacionId;
 	}
-	public void setCotizacionId(Integer cotizacionId) {
+	public void setCotizacionId(String cotizacionId) {
 		this.cotizacionId = cotizacionId;
 	}
 	public BigDecimal getCantidad() {

@@ -91,8 +91,13 @@ public class crearOperacionRipioAdapterOut implements CrearOperacionRipioPortOut
 			jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			//jsonMapper.registerModule(new JavaTimeModule()); 
 			//jsonMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); 
+			jsonMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+			jsonMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
 			
-			Operacion operacion = jsonMapper.readValue(response.getBody(), Operacion.class); 	
+			Operacion operacion = jsonMapper.readValue(response.getBody(), Operacion.class); 
+			operacion.setUsuarioId(dto.getUsuarioId());
+			operacion.setCotizacionId(dto.getCotizacionId());
+			
 			//LoginTokenRipio dto = mapper.run(tokenDto);	
 			
 			return operacion;			

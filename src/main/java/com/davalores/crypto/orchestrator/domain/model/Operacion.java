@@ -1,24 +1,33 @@
 package com.davalores.crypto.orchestrator.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Operacion {
 	String id; 				// UUID de cryptoOrchestrator (DA Valores)
 	String idExterno;
 	String idExternoProveedor; 		// UUID4 - Ident del proveedor (Ripio)
-	String quoteId;
+	String quoteId;	
+	String cotizacionId; 		//id de la Cotizacion usada en la Operacion
 	String trxIdExternoProveedor;
 	String idExternoCliente;
 	BigDecimal ratio;
-	BigDecimal ratioMercado;
+	@JsonProperty("ratio_mercado")
+	BigDecimal ratioMercado; //*nocastea
 	BigDecimal comision;
-	BigDecimal comisionCrypto;
+	@JsonProperty("comision_crypto")
+	BigDecimal comisionCrypto; //*nocastea
 	String activoBase;
 	String activoCoti;
 	BigDecimal activoCotiCantidad;
 	BigDecimal activoBaseCantidad;
-	String proveedor; 		// "RIPIO"
 	
+	String proveedor; 		// "RIPIO"
+	Integer usuarioId; 		//FK a usuario (DA Valores)
+	String creadoEnProveedor;
+	LocalDateTime creadoEn;
 	
 	String tipo;       		// "BUY" o "SELL"   => informado por Ripio (RipioWebHookMessageOpResultDto.op_type)
 	        				// PK del cliente en DA Valores 
@@ -186,6 +195,61 @@ public class Operacion {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
+
+
+	public Integer getUsuarioId() {
+		return usuarioId;
+	}
+
+
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+
+
+	public String getCreadoEnProveedor() {
+		return creadoEnProveedor;
+	}
+
+
+	public void setCreadoEnProveedor(String creadoEnProveedor) {
+		this.creadoEnProveedor = creadoEnProveedor;
+	}
+
+
+	public LocalDateTime getCreadoEn() {
+		return creadoEn;
+	}
+
+
+	public void setCreadoEn(LocalDateTime creadoEn) {
+		this.creadoEn = creadoEn;
+	}
+
+
+	public String getCotizacionId() {
+		return cotizacionId;
+	}
+
+
+	public void setCotizacionId(String cotizacionId) {
+		this.cotizacionId = cotizacionId;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Operacion [id=" + id + ", idExterno=" + idExterno + ", idExternoProveedor=" + idExternoProveedor
+				+ ", quoteId=" + quoteId + ", cotizacionId=" + cotizacionId + ", trxIdExternoProveedor="
+				+ trxIdExternoProveedor + ", idExternoCliente=" + idExternoCliente + ", ratio=" + ratio
+				+ ", ratioMercado=" + ratioMercado + ", comision=" + comision + ", comisionCrypto=" + comisionCrypto
+				+ ", activoBase=" + activoBase + ", activoCoti=" + activoCoti + ", activoCotiCantidad="
+				+ activoCotiCantidad + ", activoBaseCantidad=" + activoBaseCantidad + ", proveedor=" + proveedor
+				+ ", usuarioId=" + usuarioId + ", creadoEnProveedor=" + creadoEnProveedor + ", creadoEn=" + creadoEn
+				+ ", tipo=" + tipo + "]";
+	}
+
+ 
 	
 	
 }

@@ -19,11 +19,13 @@ public class OperacionEntity {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	String id; 				
+	Long id; 				
 	String idExterno;				// UUID de cryptoOrchestrator (DA Valores)
 	String idExternoProveedor; 		// UUID4 - Ident del proveedor (Ripio)
 	String idExternoCotizacion;
 	String quoteId;
+	
+	@Column(name = "trx_id_proveedor")
 	String trxIdProveedor;
 	String idExternoCliente;
 	BigDecimal ratio;
@@ -37,7 +39,8 @@ public class OperacionEntity {
 	String proveedor; 		// "RIPIO"
 	String tipo;
 	Integer usuarioId; 		//FK a usuario (DA Valores)
-	LocalDateTime creadoEnProveedor;
+	String creadoEnProveedor;
 	LocalDateTime creadoEn;
+
 	
 }
