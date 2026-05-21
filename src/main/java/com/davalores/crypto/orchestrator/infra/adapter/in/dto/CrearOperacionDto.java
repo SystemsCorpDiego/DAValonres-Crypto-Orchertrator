@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class CrearOperacionDto {
-	private String tipoOperacion; // COMPRA o VENTA
+	private String tipo; // COMPRA o VENTA
 	private String idExternoProveedorCotizacion;
 	private BigDecimal cantidad; // cantidad a comprar o vender
 }

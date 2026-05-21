@@ -10,8 +10,8 @@ import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearCotizacionDto
 @Mapper
 public interface CotizacionMapper {
 
-	public CotizacionSolicitud run(CrearCotizacionDto dto);
-	
 	public CotizacionDto run(Cotizacion dto);
 	
+	public CotizacionSolicitud run(CrearCotizacionDto dto);
+
 }

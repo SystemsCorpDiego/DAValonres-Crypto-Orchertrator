@@ -11,6 +11,8 @@ public class CrearOperacion {
 	
 	private Integer cotizacionId;
 	private BigDecimal cantidad;
+	
+	
 	public String getTipo() {
 		return tipo;
 	}

@@ -56,6 +56,11 @@ public class CrearOperacionService implements CrearOperacionPortIn {
 
 		Operacion operacion = crearOperacionRipioPortOut.run(dto);
 		
+		
+
+		//TODO: GRABAR en base de datos la OPERACION!!
+		
+		
 		return operacion;
 	}
 	

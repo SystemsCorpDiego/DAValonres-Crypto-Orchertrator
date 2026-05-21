@@ -1,21 +1,29 @@
 package com.davalores.crypto.orchestrator.domain.model;
 
+import java.math.BigDecimal;
+
 public class Operacion {
 	String id; 				// UUID de cryptoOrchestrator (DA Valores)
+	String idExterno;
+	String idExternoProveedor; 		// UUID4 - Ident del proveedor (Ripio)
+	String quoteId;
+	String trxIdExternoProveedor;
+	String idExternoCliente;
+	BigDecimal ratio;
+	BigDecimal ratioMercado;
+	BigDecimal comision;
+	BigDecimal comisionCrypto;
+	String activoBase;
+	String activoCoti;
+	BigDecimal activoCotiCantidad;
+	BigDecimal activoBaseCantidad;
+	String proveedor; 		// "RIPIO"
 	
-	String idProvider; 		// UUID4 - Ident del proveedor (Ripio)
 	
-	String estado; 			// "RECHA_BUY_DAV"  => estado DA Valores - OpBuyApproval Ripsa Rechaza (operacion=BUY)
-							// "APRO_BUY_DAV"   => estado DA Valores - OpBuyApproval Ripsa Aprobada (operacion=BUY)
-							// "APRO_OP_RIPIO"  => estado Ripio (RipioWebHookMessageOpResultDto.succeed=true)
-							// "RECHA_OP_RIPIO" => estado Ripio (RipioWebHookMessageOpResultDto.succeed=false)
-							// "RESER_OK_DAV"   => estado DA Valores - Se hizo la reserva de los fondos  (operacion=BUY)
-							// "DEPO_OK_DAV"    => estado DA Valores - Se hizo el depñosito de los fondos  (operacion=SELL)
-	
-	String operacion;       // "BUY" o "SELL"   => informado por Ripio (RipioWebHookMessageOpResultDto.op_type)
-	String idClient;        // PK del cliente en DA Valores 
-	
-	
+	String tipo;       		// "BUY" o "SELL"   => informado por Ripio (RipioWebHookMessageOpResultDto.op_type)
+	        				// PK del cliente en DA Valores 
+
+
 	//TODO: Cuando se analice VisualBolsa vemos que datos registramos de las transacciones 
 	// RESERVA/EXTRACCION y DEPOSITO.-
 	
@@ -23,26 +31,161 @@ public class Operacion {
 	public String getId() {
 		return id;
 	}
+
+
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getIdProvider() {
-		return idProvider;
+
+
+	public String getIdExterno() {
+		return idExterno;
 	}
-	public void setIdProvider(String idProvider) {
-		this.idProvider = idProvider;
+
+
+	public void setIdExterno(String idExterno) {
+		this.idExterno = idExterno;
 	}
-	public String getEstado() {
-		return estado;
+
+
+	public String getIdExternoProveedor() {
+		return idExternoProveedor;
 	}
-	public void setEstado(String estado) {
-		this.estado = estado;
+
+
+	public void setIdExternoProveedor(String idExternoProveedor) {
+		this.idExternoProveedor = idExternoProveedor;
 	}
-	public String getOperacion() {
-		return operacion;
+
+
+	public String getQuoteId() {
+		return quoteId;
 	}
-	public void setOperacion(String operacion) {
-		this.operacion = operacion;
-	}	
+
+
+	public void setQuoteId(String quoteId) {
+		this.quoteId = quoteId;
+	}
+
+
+	public String getTrxIdExternoProveedor() {
+		return trxIdExternoProveedor;
+	}
+
+
+	public void setTrxIdExternoProveedor(String trxIdExternoProveedor) {
+		this.trxIdExternoProveedor = trxIdExternoProveedor;
+	}
+
+
+	public String getIdExternoCliente() {
+		return idExternoCliente;
+	}
+
+
+	public void setIdExternoCliente(String idExternoCliente) {
+		this.idExternoCliente = idExternoCliente;
+	}
+
+
+	public BigDecimal getRatio() {
+		return ratio;
+	}
+
+
+	public void setRatio(BigDecimal ratio) {
+		this.ratio = ratio;
+	}
+
+
+	public BigDecimal getRatioMercado() {
+		return ratioMercado;
+	}
+
+
+	public void setRatioMercado(BigDecimal ratioMercado) {
+		this.ratioMercado = ratioMercado;
+	}
+
+
+	public BigDecimal getComision() {
+		return comision;
+	}
+
+
+	public void setComision(BigDecimal comision) {
+		this.comision = comision;
+	}
+
+
+	public BigDecimal getComisionCrypto() {
+		return comisionCrypto;
+	}
+
+
+	public void setComisionCrypto(BigDecimal comisionCrypto) {
+		this.comisionCrypto = comisionCrypto;
+	}
+
+
+	public String getActivoBase() {
+		return activoBase;
+	}
+
+
+	public void setActivoBase(String activoBase) {
+		this.activoBase = activoBase;
+	}
+
+
+	public String getActivoCoti() {
+		return activoCoti;
+	}
+
+
+	public void setActivoCoti(String activoCoti) {
+		this.activoCoti = activoCoti;
+	}
+
+
+	public BigDecimal getActivoCotiCantidad() {
+		return activoCotiCantidad;
+	}
+
+
+	public void setActivoCotiCantidad(BigDecimal activoCotiCantidad) {
+		this.activoCotiCantidad = activoCotiCantidad;
+	}
+
+
+	public BigDecimal getActivoBaseCantidad() {
+		return activoBaseCantidad;
+	}
+
+
+	public void setActivoBaseCantidad(BigDecimal activoBaseCantidad) {
+		this.activoBaseCantidad = activoBaseCantidad;
+	}
+
+
+	public String getProveedor() {
+		return proveedor;
+	}
+
+
+	public void setProveedor(String proveedor) {
+		this.proveedor = proveedor;
+	}
+
+
+	public String getTipo() {
+		return tipo;
+	}
+
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+	
 	
 }

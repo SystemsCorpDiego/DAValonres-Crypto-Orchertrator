@@ -25,7 +25,7 @@ public class CrearCotizacionService implements CrearCotizacionPortIn {
 		// TODO Auto-generated method stub
 		log.debug("run -> dto: {}", dto);
 		
-		Cotizacion cotizacion = portOut.run(dto);
+		Cotizacion cotizacion = portOut.run(dto);		
 		
 		log.debug("return -> cotizacion: {}", cotizacion);
 		return cotizacion;
