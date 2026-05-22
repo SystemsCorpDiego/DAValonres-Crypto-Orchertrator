@@ -15,6 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/usuarios/{usuarioId}/crypto-providers/ripio/clientes")
 public class CrearClienteRipioController {
 
+	/*
+	 *
+	 * Api para crear un external_ref y asociarlo al usuario del Path-Parameter
+	 * 
+	 * 
+	 */
+	
 	private final CrearClienteRipioPortIn portIn;
 	
 	public CrearClienteRipioController(CrearClienteRipioPortIn portIn) {
@@ -23,11 +30,11 @@ public class CrearClienteRipioController {
 	
 	@PostMapping
 	public ResponseEntity<?> run(@PathVariable("usuarioId")  Integer usuarioId) {
-        log.debug("run -> usuarioId: {}", usuarioId);
+        log.debug("inputParam -> usuarioId: {}", usuarioId);
         
         portIn.run(usuarioId);
         
-        log.debug("run -> return: null");
+        log.debug("outputParam -> return: null");
         return ResponseEntity.ok(null);
 	}
 	

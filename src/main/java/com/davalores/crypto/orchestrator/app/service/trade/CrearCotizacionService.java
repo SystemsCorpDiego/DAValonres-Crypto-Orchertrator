@@ -23,11 +23,11 @@ public class CrearCotizacionService implements CrearCotizacionPortIn {
 	@Override
 	public Cotizacion run(CotizacionSolicitud dto) {
 		// TODO Auto-generated method stub
-		log.debug("run -> dto: {}", dto);
+		log.debug("inputParam -> dto: {}", dto);
 		
 		Cotizacion cotizacion = portOut.run(dto);		
 		
-		log.debug("return -> cotizacion: {}", cotizacion);
+		log.debug("outputParam -> cotizacion: {}", cotizacion);
 		return cotizacion;
 		
 	}

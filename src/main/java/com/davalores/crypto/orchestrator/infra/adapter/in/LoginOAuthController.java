@@ -45,7 +45,7 @@ public class LoginOAuthController {
 		JWTokenBo dto = loginOAuth.run(usuario, clave);		
 		response = mapper.run(dto);
 		
-		log.debug("run -> response: {}", response);
+		log.debug("outputParam -> JWTokenBo: {}", response);
 		return ResponseEntity.ok(response);
 	}
 	

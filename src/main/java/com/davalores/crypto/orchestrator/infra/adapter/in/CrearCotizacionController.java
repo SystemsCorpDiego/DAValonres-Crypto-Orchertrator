@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/crypto-providers/cotizar")
 public class CrearCotizacionController {
 
+	
 	private final CrearCotizacionPortIn portIn;
 	private final CotizacionMapper mapper;
 	
@@ -30,11 +31,12 @@ public class CrearCotizacionController {
 	
 	@GetMapping
 	public ResponseEntity<CotizacionDto> run(@RequestBody CrearCotizacionDto dto) {
-		
+		log.debug("inputParam -> {}", dto);
 		CotizacionSolicitud cotizacionSolicitud = mapper.run(dto);
 		Cotizacion cotizacion = portIn.run(cotizacionSolicitud);
 		CotizacionDto response = mapper.run(cotizacion);
 		
+		log.debug("outputParam -> {}", response);
 		return ResponseEntity.ok(response);
 	}
 	

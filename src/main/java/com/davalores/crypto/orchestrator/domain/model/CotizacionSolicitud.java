@@ -16,6 +16,10 @@ public class CotizacionSolicitud {
 	public void setActivoCoti(String activoCoti) {
 		this.activoCoti = activoCoti;
 	}
+	@Override
+	public String toString() {
+		return "CotizacionSolicitud [activoBase=" + activoBase + ", activoCoti=" + activoCoti + "]";
+	}
 
 	
 }

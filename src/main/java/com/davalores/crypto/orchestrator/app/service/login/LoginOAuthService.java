@@ -11,6 +11,8 @@ import com.davalores.crypto.orchestrator.app.port.out.UsuarioRepositoryPortOut;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.JWTokenBo;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.UsuarioEsco;
+import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,13 +39,13 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 	
 	@Override
 	public JWTokenBo run(String usuaDescrip, String clave) {
-		log.debug("Input parameter -> usuaDescrip: {}", usuaDescrip);
+		log.debug("InputParam -> usuaDescrip: {} clave: {}", usuaDescrip, clave);
 		Optional<JWTokenBo> token = Optional.empty();
 		
 		if ( usuaDescrip == null)
-			throw new LoginException(null, "Debe informar un Usuario");
+			throw new BusinessException(ErrorCoreEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar un Usuario");
 		if ( clave == null)
-			throw new LoginException(null, "Debe informar un clave");
+			throw new BusinessException(ErrorCoreEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar un Clave");
 		
 		Optional<Usuario> usuario = usuarioRepository.getByUsuario(usuaDescrip);
 
@@ -56,7 +58,7 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 		}
 		
 		if ( usuario.isPresent() && token.isPresent() ) {
-			log.debug("login middleware - Output parameter -> token {}", token.get());
+			log.debug("outputParam - login middleware -> token {}", token.get());
 			return token.get();
 		}
 		 
@@ -84,11 +86,11 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 		}
 		
 		if ( token.isPresent() ) {
-			log.debug("login ESCO - Output parameter -> token {}", token.get());
+			log.debug("outputParam - login ESCO -> token {}", token.get());
 			return token.get();
 		}				
 		
-		throw new LoginException(null, "Usuario o clave invalidos");		
+		throw new LoginException(ErrorCoreEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Usuario o clave invalidos");		
 	}
 	
 	
@@ -110,7 +112,7 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 			return false;
 			
 		if (usuario.get().getClave() == null) {
-			log.debug("Usuario {} sin clave en middleware", usuario.get().getDescripcion());
+			log.debug("Usuario {} sin clave en la base middleware", usuario.get().getDescripcion());
 			return false;
 		}
 				

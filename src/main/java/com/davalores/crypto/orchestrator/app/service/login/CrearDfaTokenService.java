@@ -13,6 +13,8 @@ import com.davalores.crypto.orchestrator.app.service.common.jwt.JwtTokenData;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
 import com.davalores.crypto.orchestrator.domain.model.DfaToken;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.infra.adapter.out.CypherServiceAdapterOut;
 import com.davalores.crypto.orchestrator.infra.adapter.out.JWTServiceAdapterOut;
 import com.davalores.crypto.orchestrator.infra.adapter.out.UsuarioJpaRepositoryAdapterOut;
@@ -70,13 +72,16 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 	
 	@Override
 	public DfaToken run(String token) {
-		log.debug("run -> token: {}", token);
-		
-		//JWTTokenData jwtTokenData = JWTServiceAdapterOut.parseToken(token, token, null)
+		log.debug("inputParam -> {}", token);
 		
 		Optional<JwtTokenData> jwtTokenData = JWTServiceAdapterOut.parseToken(token, secreto, TokenTipoEnum.NORMAL);
+		if (!jwtTokenData.isPresent())
+			throw new LoginException(ErrorCoreEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Token invalido (1)");			
+	
+		Integer usuarioId = jwtTokenData.get().getUsuarioId();
 		
-		return run( jwtTokenData.get().getUsuarioId() );
+		log.debug("outputParam -> {}", usuarioId);
+		return run( usuarioId );
 	}
 	
 

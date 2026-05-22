@@ -1,9 +1,10 @@
-package com.davalores.crypto.orchestrator.infra.adapter.out.entity;
+package com.davalores.crypto.orchestrator.infra.adapter.out.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.davalores.crypto.orchestrator.domain.model.Operacion;
+import com.davalores.crypto.orchestrator.infra.adapter.out.entity.OperacionEntity;
 
 @Mapper(componentModel = "spring")
 public interface OperacionEntityMapper {

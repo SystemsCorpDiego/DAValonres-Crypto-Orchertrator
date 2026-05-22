@@ -8,6 +8,10 @@ public class BusinessException extends TicketRuntimeException {
 		super(message);
 	}
 
+	public BusinessException(String codigo, String message) {
+		super(codigo, message);
+	}
+
 	@Override
 	public String getErrorType() {
 		return ErrorTypeEnum.BUSINESS_ERROR.name();

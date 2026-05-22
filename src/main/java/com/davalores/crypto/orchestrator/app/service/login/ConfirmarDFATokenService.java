@@ -28,14 +28,14 @@ public class ConfirmarDFATokenService implements ConfirmarDFATokenPortIn {
 	
 	@Override
     public void run(Integer usuarioId, boolean habilitar) {		
-		log.debug("run -> usuarioId: {} habilitar: {}", usuarioId, habilitar);
+		log.debug("inputParam -> usuarioId: {} habilitar: {}", usuarioId, habilitar);
 		usuarioRepository.saveConfirmarDfa(usuarioId, habilitar);		
-		log.debug("run -> FIN");
+		log.debug("outputParam -> null");
 	}
 
 	@Override	
 	public void run(String token, boolean habilitar) {
-		log.debug("run -> token: {} habilitar: {}", token, habilitar);
+		log.debug("inputParam -> token: {} habilitar: {}", token, habilitar);
 		Optional<JwtTokenData> jwtTokenData = JWTServiceAdapterOut.parseToken(token, secreto, TokenTipoEnum.NORMAL);
 		run( jwtTokenData.get().getUsuarioId(), habilitar );
 	}

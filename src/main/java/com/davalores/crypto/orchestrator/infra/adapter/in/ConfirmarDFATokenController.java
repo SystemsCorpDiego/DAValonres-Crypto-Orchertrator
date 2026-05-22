@@ -16,6 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/usuarios/dfa")
 public class ConfirmarDFATokenController {
 
+	/*
+	 * Controller para setear usuario.dfa = true o false. 
+	 * Debe de tener una semilla creada 
+	 * */
+	
 	private final String tokenHeader;
 	private final ConfirmarDFATokenPortIn portIn;
 	
@@ -27,14 +32,14 @@ public class ConfirmarDFATokenController {
 	
 	
 	@PutMapping("/habilitar/FALSE")
-	public ResponseEntity<?> habilitar(HttpServletRequest request) {
-		log.debug("run -> ");
+	public ResponseEntity<?> habilitar(HttpServletRequest request) {		
+		log.debug("inputParam -> ");
 		String token = getAuthToken(request);
 		log.debug("run -> token: {}", token);
 
 		portIn.run(token, false);
 		
-		log.debug("run -> return: null");
+		log.debug("outputParam -> return: null");
 		return ResponseEntity.ok(null);
 	}
 

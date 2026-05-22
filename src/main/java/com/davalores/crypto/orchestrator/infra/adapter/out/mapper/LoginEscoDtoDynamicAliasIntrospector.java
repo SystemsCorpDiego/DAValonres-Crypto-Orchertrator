@@ -1,4 +1,4 @@
-package com.davalores.crypto.orchestrator.infra.adapter.out;
+package com.davalores.crypto.orchestrator.infra.adapter.out.mapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,13 +8,12 @@ import com.fasterxml.jackson.databind.PropertyName;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 
-public class ClienteRipioDtoDynamicAliasIntrospector extends JacksonAnnotationIntrospector {
+public class LoginEscoDtoDynamicAliasIntrospector extends JacksonAnnotationIntrospector {
 
-	private static final long serialVersionUID = -2360012565847827939L;
-	
-	//setId es destino, idExterno es origen
+	private static final long serialVersionUID = 34600728324292221L;
 	private final Map<String, List<String>> aliasMap = Map.of(
-	        "setId", List.of("idExterno")         
+	        "setId", List.of("userID"),
+	        "setTipo", List.of("userType")	        
 	    );
 	
 	
@@ -23,4 +22,6 @@ public class ClienteRipioDtoDynamicAliasIntrospector extends JacksonAnnotationIn
         return aliasMap.getOrDefault(a.getName(), Collections.emptyList())
             .stream().map(PropertyName::new).toList();
     }
+	 
+
 }

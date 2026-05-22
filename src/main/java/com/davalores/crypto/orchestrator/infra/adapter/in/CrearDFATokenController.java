@@ -18,6 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/usuarios/dfa")
 public class CrearDFATokenController {
+	
+	/*
+	 * Crea una semilla de DFA en formato QR y URL para el usuario logueado.
+	 * 
+	 */
 
 	private final String tokenHeader;
 	private final CrearDfaTokenPortIn portIn;
@@ -33,15 +38,15 @@ public class CrearDFATokenController {
 	
 	@PostMapping()
 	public ResponseEntity<DfaTokenDto> run(HttpServletRequest request) {
-		log.debug("run -> ");
+		log.debug("inputParam -> ");
 		
 		String token = getAuthToken(request);
-		log.debug("run -> token: {}", token);		
+		log.debug("run -> {}", token);		
 		
 		DfaToken dfaToken = portIn.run(token);
 		DfaTokenDto response = mapper.run(dfaToken);
 		
-		log.debug("run -> response: {}", response);		
+		log.debug("outputParam -> {}", response);		
 		return ResponseEntity.ok(response);
 	}
 

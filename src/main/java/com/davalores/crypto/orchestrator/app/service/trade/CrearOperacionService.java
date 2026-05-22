@@ -16,6 +16,7 @@ import com.davalores.crypto.orchestrator.domain.model.CrearOperacion;
 import com.davalores.crypto.orchestrator.domain.model.Operacion;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,25 +41,26 @@ public class CrearOperacionService implements CrearOperacionPortIn {
 	@Override
 	public Operacion run(String authToken, CrearOperacion dto) {
 		// TODO sacar usuarioId del token, recuperar ripio_id del usuario,  y luego llamar a Ripio para crear la operacion
-		log.debug("run -> dto: {}", dto);
+		log.debug("inputParam -> authToken: {} - dto: {}", authToken, dto);
 		
 		//Valida que sea TokenTipoEnum.AUTENTICACION_PARCIAL y recupera el usuarioId del claim
 		Optional<JwtTokenData> jwtTokenData = JWTServicePortOut.parseToken(authToken, secreto, TokenTipoEnum.NORMAL);		
 		if ( !jwtTokenData.isPresent() )
-			throw new BusinessException("Token invalido (1) para crear operacion");
+			throw new BusinessException(ErrorCoreEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Token invalido (1)");
 		dto.setUsuarioId(jwtTokenData.get().usuarioId);
 		
 		Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-				.orElseThrow(() -> new BusinessException("Token invalido (2) para crear operacion"));
+				.orElseThrow(() -> new BusinessException(ErrorCoreEnum.CONFIGURATION_ERROR.toString(), "Token invalido (2): Id de Uusuario mal configurado."));
 		
 		if ( usuario.getRipioId() == null )
-			throw new BusinessException("El usuario no tiene asociado un RipioId");
+			throw new BusinessException(ErrorCoreEnum.CONFIGURATION_ERROR.toString(), "El usuario no tiene asociado un RipioId");
 		dto.setRipioId(usuario.getRipioId());
 
 		Operacion operacion = crearOperacionRipioPortOut.run(dto);
 		
 		operacion = operacionRepository.save(operacion);
 		
+		log.debug("outputParam -> {}", operacion);
 		return operacion;
 	}
 	

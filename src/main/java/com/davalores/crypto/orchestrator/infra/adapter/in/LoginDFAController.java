@@ -35,7 +35,7 @@ public class LoginDFAController {
 	
 	@PostMapping
 	public ResponseEntity<OauthTokenResponseDto>  run(HttpServletRequest request, @RequestBody DFACodeDto dto) {
-		log.debug("run -> dto: {}", dto);
+		log.debug("inputParam -> {}", dto);
 		OauthTokenResponseDto response = null;
 		//request: recupero token y saco usuario
 		String token = getAuthToken(request);
@@ -44,7 +44,7 @@ public class LoginDFAController {
 		JWTokenBo reg = loginDFA.run(token, dto.getDfaValor());
 		response = mapper.run(reg);
 		
-		log.debug("run -> response: {}", response);
+		log.debug("outputParam -> {}", response);
 		//devuelvo nuevo token 
 		return ResponseEntity.ok(response);
 	}

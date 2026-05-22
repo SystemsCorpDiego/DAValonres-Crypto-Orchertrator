@@ -19,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("usuarios/")
 public class CrearUsuarioController {
 
+	/*
+	 * Crea un usuario en la base de Crypto-Orchestrator
+	 */
+	
 	private final CrearUsuarioPortIn portIn;
 	private final UsuarioMapper mapper;
 	
@@ -29,13 +33,13 @@ public class CrearUsuarioController {
 	
 	@PostMapping
 	public ResponseEntity<UsuarioDto> run(@RequestBody CrearUsuarioDto dto) {
-		log.debug("run -> dto: {}", dto);
+		log.debug("inputParam -> {}", dto);
 		
 		Usuario usuario = mapper.run(dto);
 		usuario = portIn.run(usuario);
 		UsuarioDto response = mapper.run(usuario);
 		
-		log.debug("run -> response: {}", response);
+		log.debug("outputParam ->  {}", response);
 		return ResponseEntity.ok(response);
 	}
 	

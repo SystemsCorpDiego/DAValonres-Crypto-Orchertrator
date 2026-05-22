@@ -1,4 +1,4 @@
-package com.davalores.crypto.orchestrator.infra.adapter.out;
+package com.davalores.crypto.orchestrator.infra.adapter.out.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

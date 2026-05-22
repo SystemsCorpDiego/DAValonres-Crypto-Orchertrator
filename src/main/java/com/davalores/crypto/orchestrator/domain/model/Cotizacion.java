@@ -77,5 +77,13 @@ public class Cotizacion {
 	public void setVentaRatio(BigDecimal ventaRatio) {
 		this.ventaRatio = ventaRatio;
 	}
+	@Override
+	public String toString() {
+		return "Cotizacion [proveedor=" + proveedor + ", activoBase=" + activoBase + ", activoCoti=" + activoCoti
+				+ ", compraComision=" + compraComision + ", compraRatio=" + compraRatio + ", expira=" + expira
+				+ ", idExterno=" + idExterno + ", idExternoProveedor=" + idExternoProveedor + ", ventaComision="
+				+ ventaComision + ", ventaRatio=" + ventaRatio + "]";
+	}
+	
 	
 }
