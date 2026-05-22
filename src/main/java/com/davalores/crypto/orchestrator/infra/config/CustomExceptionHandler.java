@@ -36,7 +36,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		problemDetail.setProperty("ticket", ex.getTicketError());
 		problemDetail.setProperty("fecha", ex.getDate());
 		problemDetail.setProperty("tipo", ex.getErrorType());
-		
+		problemDetail.setProperty("codigo", ex.getCodigo());
 		
 		log.error("TicketRuntimeException - FIN");
 		return ResponseEntity.status(status).body(problemDetail);						

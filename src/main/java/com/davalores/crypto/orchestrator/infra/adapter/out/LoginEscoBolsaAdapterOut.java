@@ -48,7 +48,7 @@ public class LoginEscoBolsaAdapterOut implements LoginEscoBolsaPortOut {
 	@Override
 	public UsuarioEsco run(String usuario, String clave) {
 		log.debug("inputParam -> usuario: {} clave: {}", usuario, clave);
-		
+		//TODO: Esco => HTTP400 con body => error login
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON); 
 		headers.add("api-version", apiVersion);
@@ -77,8 +77,7 @@ public class LoginEscoBolsaAdapterOut implements LoginEscoBolsaPortOut {
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("Resource not found: " + e.getMessage());		    
-		    //throw new LoginException(HttpStatus.NOT_FOUND.toString(), "CotizarRipioAdapterOut() - Resource not found: " + e.getMessage() );
-		    throw new LoginException(ErrorCoreEnum.HTTP_NOT_FOUND.toString(), "Resource not found: " + apiUrl );
+		    throw new LoginException(ErrorCoreEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
 			log.error("HTTP Error: " + e.getStatusCode());

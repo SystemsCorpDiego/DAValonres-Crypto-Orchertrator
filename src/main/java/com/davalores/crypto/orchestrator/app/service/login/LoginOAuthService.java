@@ -67,6 +67,10 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 		UsuarioEsco usuarioEsco = null;
 		try {
 			usuarioEsco = loginEscoBolsa.run(usuaDescrip, clave);
+		} catch (LoginException el) {
+			if (el.getCodigo().equals(ErrorCoreEnum.CONFIGURATION_ERROR.toString())) {
+				throw el;
+			}
 		} catch (Exception e) {
             log.error("Error al loguear a VisualBolsa: " + e.toString());
             usuarioEsco = null;

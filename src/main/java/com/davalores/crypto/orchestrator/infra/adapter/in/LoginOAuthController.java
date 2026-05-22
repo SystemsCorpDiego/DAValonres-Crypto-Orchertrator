@@ -39,7 +39,7 @@ public class LoginOAuthController {
 		//saco usuario y clave
 		String usuario = getUsuarioFromRequest(request);
 		String clave = getClaveFromRequest(request);
-		log.debug("run -> usuario: {} clave: {}", clave);
+		log.debug("run -> usuario: {} clave: {}", usuario, clave);
 		
 		//llamo al caso de uso 		
 		JWTokenBo dto = loginOAuth.run(usuario, clave);		

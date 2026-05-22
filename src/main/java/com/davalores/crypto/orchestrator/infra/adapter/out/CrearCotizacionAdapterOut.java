@@ -76,8 +76,7 @@ public class CrearCotizacionAdapterOut implements CrearCotizacionPortOut {
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("Resource not found: " + e.getMessage());		    
-		    //throw new LoginException(HttpStatus.NOT_FOUND.toString(), "CrearCotizacionAdapterOut() - Resource not found: " + e.getMessage() );
-		    throw new CotizacionException(ErrorCoreEnum.HTTP_NOT_FOUND.toString(), "Resource not found: " + apiUrl );
+		    throw new CotizacionException(ErrorCoreEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
 			log.error("HTTP Error: " + e.getStatusCode());

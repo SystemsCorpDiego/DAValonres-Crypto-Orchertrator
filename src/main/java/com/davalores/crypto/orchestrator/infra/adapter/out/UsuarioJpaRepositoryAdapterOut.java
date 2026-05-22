@@ -37,7 +37,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			if ( reg.isPresent() )
 				usuarioBo = mapper.run(reg.get());
 			
-			return Optional.of(usuarioBo);
+			return Optional.ofNullable(usuarioBo);
 		} catch (Exception e) {
 			log.error("Error al consultar el usuario", e);			
 			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al consultar el usuario", e);
@@ -52,7 +52,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			if ( reg.isPresent() )
 				usuario = mapper.run(reg.get());
 			
-			return Optional.of(usuario);
+			return Optional.ofNullable(usuario);
 		} catch (Exception e) {
 			log.error("Error al consultar el usuario", e);			
 			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al consultar el usuario", e);
