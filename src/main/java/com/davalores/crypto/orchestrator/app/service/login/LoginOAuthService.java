@@ -12,7 +12,7 @@ import com.davalores.crypto.orchestrator.app.service.common.jwt.JWTokenBo;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.UsuarioEsco;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
-import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +43,9 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 		Optional<JWTokenBo> token = Optional.empty();
 		
 		if ( usuaDescrip == null)
-			throw new BusinessException(ErrorCoreEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar un Usuario");
+			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar un Usuario");
 		if ( clave == null)
-			throw new BusinessException(ErrorCoreEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar un Clave");
+			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar un Clave");
 		
 		Optional<Usuario> usuario = usuarioRepository.getByUsuario(usuaDescrip);
 
@@ -68,7 +68,7 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 		try {
 			usuarioEsco = loginEscoBolsa.run(usuaDescrip, clave);
 		} catch (LoginException el) {
-			if (el.getCodigo().equals(ErrorCoreEnum.CONFIGURATION_ERROR.toString())) {
+			if (el.getCodigo().equals(ErrorCodeEnum.CONFIGURATION_ERROR.toString())) {
 				throw el;
 			}
 		} catch (Exception e) {
@@ -94,7 +94,7 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 			return token.get();
 		}				
 		
-		throw new LoginException(ErrorCoreEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Usuario o clave invalidos");		
+		throw new LoginException(ErrorCodeEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Usuario o clave invalidos");		
 	}
 	
 	
@@ -111,10 +111,13 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 		return Optional.of(token);
 	}
 	
-	private boolean loginMW(Optional<Usuario> usuario, String clave) {
+	private boolean loginMW(Optional<Usuario> usuario, String clave) {		
 		if (usuario.isEmpty())
 			return false;
-			
+		
+		if (!usuario.get().getHabilitado())
+			throw new LoginException(ErrorCodeEnum.BUSINESS_ERROR.toString(), "Su cuenta de Usuario se encuentra deshabilitada. Por favor, contacte al administrador del sistema.");
+
 		if (usuario.get().getClave() == null) {
 			log.debug("Usuario {} sin clave en la base middleware", usuario.get().getDescripcion());
 			return false;

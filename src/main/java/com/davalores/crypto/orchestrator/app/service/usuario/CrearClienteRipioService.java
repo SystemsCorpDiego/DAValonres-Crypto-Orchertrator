@@ -10,7 +10,7 @@ import com.davalores.crypto.orchestrator.app.port.out.UsuarioRepositoryPortOut;
 import com.davalores.crypto.orchestrator.domain.model.ClienteRipio;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
-import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 
 @Service
 public class CrearClienteRipioService implements CrearClienteRipioPortIn {
@@ -29,10 +29,10 @@ public class CrearClienteRipioService implements CrearClienteRipioPortIn {
 		
 		Optional<Usuario> usuario = repository.findById(usuarioId);		
 		if (usuario.isEmpty())
-			throw new BusinessException(ErrorCoreEnum.BUSINESS_ERROR.toString(), "Usuario no encontrado para o id: " + usuarioId);
+			throw new BusinessException(ErrorCodeEnum.BUSINESS_ERROR.toString(), "Usuario no encontrado para o id: " + usuarioId);
 
 		if (usuario.get().getRipioId() != null) 
-			throw new BusinessException(ErrorCoreEnum.BUSINESS_ERROR.toString(),  "Usuario ya tiene id de Cliente Ripio");
+			throw new BusinessException(ErrorCodeEnum.BUSINESS_ERROR.toString(),  "Usuario ya tiene id de Cliente Ripio");
 		
 		ClienteRipio clienteRipio = crearClienteRipioPortOut.run();
 		

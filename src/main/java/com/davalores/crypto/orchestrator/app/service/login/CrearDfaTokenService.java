@@ -13,7 +13,8 @@ import com.davalores.crypto.orchestrator.app.service.common.jwt.JwtTokenData;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
 import com.davalores.crypto.orchestrator.domain.model.DfaToken;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
-import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.infra.adapter.out.CypherServiceAdapterOut;
 import com.davalores.crypto.orchestrator.infra.adapter.out.JWTServiceAdapterOut;
@@ -49,7 +50,7 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 		//validar Usuario !!
 		Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
 		if ( usuario.isEmpty() )
-			throw new RuntimeException("Usuario no encontrado");
+			throw new BusinessException(ErrorCodeEnum.NO_DATA_FOUND_ERROR.toString(), "Usuario no encontrado");
 
 		String secretKey = generateSecretKey();
 		String secretKeyCyphed = cypherService.encriptar(secretKey);		
@@ -76,7 +77,7 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 		
 		Optional<JwtTokenData> jwtTokenData = JWTServiceAdapterOut.parseToken(token, secreto, TokenTipoEnum.NORMAL);
 		if (!jwtTokenData.isPresent())
-			throw new LoginException(ErrorCoreEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Token invalido (1)");			
+			throw new LoginException(ErrorCodeEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Token invalido (1)");			
 	
 		Integer usuarioId = jwtTokenData.get().getUsuarioId();
 		

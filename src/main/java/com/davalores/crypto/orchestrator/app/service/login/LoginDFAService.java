@@ -15,7 +15,7 @@ import com.davalores.crypto.orchestrator.app.service.common.jwt.JwtTokenData;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
-import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginDfaException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -47,17 +47,17 @@ public class LoginDFAService implements LoginDFAPortIn {
 		//Valida que sea TokenTipoEnum.AUTENTICACION_PARCIAL y recupera el usuarioId del claim
 		Optional<JwtTokenData> jwtTokenData = JWTServicePortOut.parseToken(token, secreto, TokenTipoEnum.AUTENTICACION_PARCIAL);		
 		if ( !jwtTokenData.isPresent() )
-			throw new LoginDfaException(ErrorCoreEnum.HTTP_DFA_UNAUTHORIZED_ERROR.toString(), "Token invalido (1)");
+			throw new LoginDfaException(ErrorCodeEnum.HTTP_DFA_UNAUTHORIZED_ERROR.toString(), "Token invalido (1)");
 		
 		
 		//recupera el usuarioId del repository
 		Optional<Usuario> usuario = usuarioRepository.findById(jwtTokenData.get().usuarioId);
 		if ( usuario.isEmpty() )
-			throw new LoginDfaException(ErrorCoreEnum.CONFIGURATION_ERROR.toString(), "Usuario con id mal configurado. Token invalido (2)");
+			throw new LoginDfaException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Usuario con id mal configurado. Token invalido (2)");
 		
 		//valida que el dfaCode sea correcto para la semilla del usuario
 		if ( !validateDFACode.run(usuario.get().getDfaSemilla(), dfaCode))
-			throw new LoginDfaException(ErrorCoreEnum.HTTP_DFA_UNAUTHORIZED_ERROR.toString(), "Token invalido (3)");
+			throw new LoginDfaException(ErrorCodeEnum.HTTP_DFA_UNAUTHORIZED_ERROR.toString(), "Código de validación 2FA invalido");
 		
 		// generar token definitivo
 		salida = generarAuthToken.run(usuario.get().getId(), usuario.get().getUsuario());			

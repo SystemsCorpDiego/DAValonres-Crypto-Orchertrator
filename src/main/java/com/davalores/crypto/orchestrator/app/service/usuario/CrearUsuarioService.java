@@ -7,7 +7,7 @@ import com.davalores.crypto.orchestrator.app.port.out.EncriptadorClaveServicePor
 import com.davalores.crypto.orchestrator.app.port.out.UsuarioRepositoryPortOut;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
-import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,15 +30,15 @@ public class CrearUsuarioService implements CrearUsuarioPortIn {
 		// TODO: validar clave, atributos, etc...
 		
 		if ( registro.getClave() == null || registro.getClave().isEmpty() ) {
-			throw new BusinessException(ErrorCoreEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "La clave no puede ser nula o vacía");
+			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "La clave no puede ser nula o vacía");
 		}
 		
 		if ( registro.getDescripcion() == null || registro.getDescripcion().isEmpty() ) {
-			throw new BusinessException(ErrorCoreEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "La descripcion no puede ser nula o vacía");
+			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "La descripcion no puede ser nula o vacía");
 		}
 		
 		if ( registro.getUsuario() == null || registro.getUsuario().isEmpty() ) {
-			throw new BusinessException(ErrorCoreEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "El usuario no puede ser nula o vacía");
+			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "El usuario no puede ser nula o vacía");
 		}
 		
 		String claveEncriptada = encriptador.run(registro.getClave());

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.davalores.crypto.orchestrator.app.port.out.OperacionRepositoryPortOut;
 import com.davalores.crypto.orchestrator.domain.model.Operacion;
-import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.RepositoryException;
 import com.davalores.crypto.orchestrator.infra.adapter.out.entity.OperacionEntity;
 import com.davalores.crypto.orchestrator.infra.adapter.out.mapper.OperacionEntityMapper;
@@ -37,7 +37,7 @@ public class OperacionJpaRepositoryAdapterOut implements OperacionRepositoryPort
 			return operacion;
 		} catch (Exception e) {
 			log.error("Error al grabar la Operacion de Compra/Venta", e);			
-			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al grabar la Operacion de Compra/Venta", e);
+			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al grabar la Operacion de Compra/Venta", e);
 		}
 	}
 	

@@ -1,6 +1,6 @@
 package com.davalores.crypto.orchestrator.domain.model.exception;
 
-public enum ErrorCoreEnum {	 
+public enum ErrorCodeEnum {	 
 
 	HTTP_UNAUTHORIZED_ERROR("HTTP_UNAUTHORIZED_ERROR"),
 	HTTP_DFA_UNAUTHORIZED_ERROR("HTTP_DFA_UNAUTHORIZED_ERROR"),
@@ -13,12 +13,13 @@ public enum ErrorCoreEnum {
 	UNEXPECTED_ERROR("UNEXPECTED_ERROR"),
 	INPUT_PARAM_REQUIRED_ERROR("INPUT_PARAM_REQUIRED_ERROR"),
 	CONFIGURATION_ERROR("CONFIGURATION_ERROR"),
-	BUSINESS_ERROR("BUSINESS_ERROR")
+	BUSINESS_ERROR("BUSINESS_ERROR"),
+	NO_DATA_FOUND_ERROR("NO_DATA_FOUND_ERROR")
 	;
 	
 	private String type;
 	 
-	ErrorCoreEnum(String type) {
+	ErrorCodeEnum(String type) {
         this.type = type;
     }
  

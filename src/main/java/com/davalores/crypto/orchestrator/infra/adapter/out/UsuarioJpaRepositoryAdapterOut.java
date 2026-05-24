@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.davalores.crypto.orchestrator.app.port.out.UsuarioRepositoryPortOut;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
-import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.RepositoryException;
 import com.davalores.crypto.orchestrator.infra.adapter.out.entity.UsuarioEntity;
 import com.davalores.crypto.orchestrator.infra.adapter.out.mapper.UsuarioEntityMapper;
@@ -40,7 +40,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			return Optional.ofNullable(usuarioBo);
 		} catch (Exception e) {
 			log.error("Error al consultar el usuario", e);			
-			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al consultar el usuario", e);
+			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al consultar el usuario", e);
 		}
 	}
 
@@ -55,7 +55,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			return Optional.ofNullable(usuario);
 		} catch (Exception e) {
 			log.error("Error al consultar el usuario", e);			
-			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al consultar el usuario", e);
+			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al consultar el usuario", e);
 		}
 	}
 
@@ -68,7 +68,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			return usuario;
 		} catch (Exception e) {
 			log.error("Error al guardar el usuario", e);			
-			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al guardar el usuario", e);
+			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al guardar el usuario", e);
 		}
 	}
 
@@ -80,7 +80,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			return mapper.run(reg);
 		} catch (Exception e) {
 			log.error("Error al guardar el usuario", e);			
-			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al guardar la semilla DFA del usuario", e);
+			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al guardar la semilla DFA del usuario", e);
 		}
 
 	}
@@ -101,7 +101,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			return usuario;		
 		} catch (Exception e) {
 			log.error("Error al guardar el usuario", e);			
-			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al guardar la semilla DFA del usuario", e);
+			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al guardar la semilla DFA del usuario", e);
 		}
 	}
 
@@ -116,7 +116,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			return usuario;
 		} catch (Exception e) {
 			log.error("Error al guardar el usuario", e);			
-			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al guardar la semilla DFA del usuario", e);
+			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al guardar la semilla DFA del usuario", e);
 		}
 	}
 	
@@ -126,7 +126,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			reg.setDfaSemilla(null);			
 		} else {
 			if (reg.getDfaSemilla() == null)
-				throw new BusinessException(ErrorCoreEnum.CONFIGURATION_ERROR.toString(), "No se puede habilitar el DFA sin una semilla generada");
+				throw new BusinessException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "No se puede habilitar el DFA sin una semilla generada");
 		}
 		reg = repository.save(reg);
 		return reg;
@@ -142,7 +142,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			return usuario;
 		} catch (Exception e) {
 			log.error("Error al guardar el usuario", e);			
-			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al guardar la semilla DFA del usuario", e);
+			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al guardar la semilla DFA del usuario", e);
 		}
 	}
 		
@@ -158,7 +158,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			return registro;
 		} catch (Exception e) {
 			log.error("Error al guardar el usuario", e);			
-			throw new RepositoryException(ErrorCoreEnum.JPA_ERROR.toString(), "Error al guardar el id de Cliente Ripio", e);
+			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al guardar el id de Cliente Ripio", e);
 		}
 	}
 }

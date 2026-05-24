@@ -17,7 +17,7 @@ import com.davalores.crypto.orchestrator.app.port.out.CrearCotizacionPortOut;
 import com.davalores.crypto.orchestrator.domain.model.Cotizacion;
 import com.davalores.crypto.orchestrator.domain.model.CotizacionSolicitud;
 import com.davalores.crypto.orchestrator.domain.model.exception.CotizacionException;
-import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCoreEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.domain.model.exception.OperacionException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,7 +61,7 @@ public class CrearCotizacionAdapterOut implements CrearCotizacionPortOut {
 			loginJsonDto.put("activoCoti", solicitud.getActivoCoti());
 		} catch (JSONException e) {
 			log.error("JSONException: " + e.getMessage());
-			throw new CotizacionException(ErrorCoreEnum.JSON_MAPPER_SERIALIZE_ERROR.toString(),  "Error en parametros de entrada " + e.toString());
+			throw new CotizacionException(ErrorCodeEnum.JSON_MAPPER_SERIALIZE_ERROR.toString(),  "Error en parametros de entrada " + e.toString());
 		} 
 		     
 		HttpEntity<String> request =  new HttpEntity<String>(loginJsonDto.toString(), headers);
@@ -76,14 +76,14 @@ public class CrearCotizacionAdapterOut implements CrearCotizacionPortOut {
 		} catch (HttpClientErrorException.NotFound e) {
 		    // Handle 404 specifically
 		    log.error("Resource not found: " + e.getMessage());		    
-		    throw new CotizacionException(ErrorCoreEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
+		    throw new CotizacionException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
 			log.error("HTTP Error: " + e.getStatusCode());
-			throw new CotizacionException(ErrorCoreEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			throw new CotizacionException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
 		} catch (Exception e) {
 			log.error("ERROR-INESPERADO: " + e.toString());
-			throw new CotizacionException(ErrorCoreEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());
+			throw new CotizacionException(ErrorCodeEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());
 		}
 		
 		if ( !response.getStatusCode().is2xxSuccessful() ) {
@@ -106,10 +106,10 @@ public class CrearCotizacionAdapterOut implements CrearCotizacionPortOut {
 			return cotizacion;			
 		} catch (JsonMappingException e) {
 			log.error("JsonMappingException: " + e.getMessage());
-			throw new CotizacionException(ErrorCoreEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonMappingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
+			throw new CotizacionException(ErrorCodeEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonMappingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
 		} catch (JsonProcessingException e) {
 			log.error("JsonProcessingException: " + e.getMessage());
-			throw new CotizacionException(ErrorCoreEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonProcessingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
+			throw new CotizacionException(ErrorCodeEnum.JSON_MAPPER_DESERIALIZE_ERROR.toString(), "Error JsonProcessingException - Response.body: " + response.getBody() + " - Error: " + e.toString());
 		}
 		
 	}
