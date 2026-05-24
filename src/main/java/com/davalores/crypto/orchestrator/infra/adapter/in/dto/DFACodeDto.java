@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class DFACodeDto {
 
-	private String dfaValor;
+	private String codigo;
 
 }

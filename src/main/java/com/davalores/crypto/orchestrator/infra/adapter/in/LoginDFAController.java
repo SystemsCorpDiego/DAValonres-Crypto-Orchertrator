@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("auth/login/dfa")
+@RequestMapping("auth/login/2fa")
 public class LoginDFAController {
 
 	private final String tokenHeader; 
@@ -41,7 +41,7 @@ public class LoginDFAController {
 		String token = getAuthToken(request);
 		
 		//llamo al caso de uso  
-		JWTokenBo reg = loginDFA.run(token, dto.getDfaValor());
+		JWTokenBo reg = loginDFA.run(token, dto.getCodigo());
 		response = mapper.run(reg);
 		
 		log.debug("outputParam -> {}", response);

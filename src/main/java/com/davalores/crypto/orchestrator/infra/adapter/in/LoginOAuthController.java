@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/auth/login/")
+@RequestMapping("/auth/login")
 public class LoginOAuthController {
 
 	private LoginMapper mapper;
@@ -31,7 +31,7 @@ public class LoginOAuthController {
 	}
 		
 	
-	@GetMapping
+	@PostMapping
 	public ResponseEntity<OauthTokenResponseDto>  run(HttpServletRequest request) {
 		log.debug("run -> ");
 		OauthTokenResponseDto response = null;
