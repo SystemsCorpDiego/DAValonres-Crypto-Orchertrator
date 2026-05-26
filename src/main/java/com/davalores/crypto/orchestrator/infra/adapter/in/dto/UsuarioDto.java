@@ -8,5 +8,10 @@ public class UsuarioDto {
 	String id;
 	String usuario;
 	String descripcion;	
+	String escoId;
+	Boolean habilitado;
+	Boolean dfa;
+	String ripioId;
+	Boolean ripioHabilitado;
 	
 }

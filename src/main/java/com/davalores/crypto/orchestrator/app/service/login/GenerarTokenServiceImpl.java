@@ -34,8 +34,8 @@ public class GenerarTokenServiceImpl implements GenerarTokenService {
 	}
 	
 	@Override
-	public JWTokenBo runParcial(String userId, String username) {
-		String token = createTokenParcial(userId, username);
+	public JWTokenBo runParcial(String usuarioId, String username) {
+		String token = createTokenParcial(usuarioId, username);
         return new JWTokenBo(token, null);
 	}
 

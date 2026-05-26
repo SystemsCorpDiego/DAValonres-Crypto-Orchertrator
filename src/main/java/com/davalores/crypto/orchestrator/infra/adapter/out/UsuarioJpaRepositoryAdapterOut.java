@@ -1,5 +1,6 @@
 package com.davalores.crypto.orchestrator.infra.adapter.out;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -45,7 +46,7 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 	}
 
 	@Override
-	public Optional<Usuario> getByUsuario(String usuaDescrip) {
+	public Optional<Usuario> findByUsuario(String usuaDescrip) {
 		try {
 			Optional<UsuarioEntity> reg = repository.findByUsuario(usuaDescrip);
 			Usuario usuario = null;
@@ -58,6 +59,18 @@ public class UsuarioJpaRepositoryAdapterOut implements UsuarioRepositoryPortOut 
 			throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al consultar el usuario", e);
 		}
 	}
+	
+	@Override
+	public List<Usuario> getAll() {
+        try {
+            List<UsuarioEntity> regs = repository.findAll();
+            List<Usuario> usuarios = mapper.run(regs);
+            return usuarios;
+        } catch (Exception e) {
+            log.error("Error al consultar los usuarios", e);			
+            throw new RepositoryException(ErrorCodeEnum.JPA_ERROR.toString(), "Error al consultar los usuarios", e);
+        }
+    }
 
 	@Override
 	public Usuario save(Usuario usuario) {

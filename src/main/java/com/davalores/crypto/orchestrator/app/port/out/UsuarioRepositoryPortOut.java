@@ -1,5 +1,6 @@
 package com.davalores.crypto.orchestrator.app.port.out;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
@@ -7,9 +8,9 @@ import com.davalores.crypto.orchestrator.domain.model.Usuario;
 public interface UsuarioRepositoryPortOut {
 	//TODO: definir métodos de salída para o repositório de usuários
 	
-	public Optional<Usuario> findById(Integer id);
-	
-	public Optional<Usuario> getByUsuario(String usuario);
+	public Optional<Usuario> findById(Integer id);	
+	public Optional<Usuario> findByUsuario(String usuario);	
+	public List<Usuario> getAll();
 	
 	public Usuario save(Usuario registro);
 	

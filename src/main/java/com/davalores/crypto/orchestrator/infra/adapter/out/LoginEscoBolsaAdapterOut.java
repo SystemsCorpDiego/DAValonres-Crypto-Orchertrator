@@ -98,7 +98,10 @@ public class LoginEscoBolsaAdapterOut implements LoginEscoBolsaPortOut {
 			
 			UsuarioEsco usuarioEsco = jsonMapper.readValue(response.getBody(), UsuarioEsco.class); 	
 			//LoginTokenRipio dto = mapper.run(tokenDto);	
-			
+			if (usuarioEsco != null) {
+				usuarioEsco.setUsuario(usuario);
+				usuarioEsco.setClave(clave);
+			}
 			return usuarioEsco;			
 		} catch (JsonMappingException e) {
 			log.error("JsonMappingException: " + e.getMessage());

@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.davalores.crypto.orchestrator.app.port.in.login.LoginDFAPortIn;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.JWTokenBo;
 import com.davalores.crypto.orchestrator.app.service.login.LoginDFAService;
+import com.davalores.crypto.orchestrator.domain.model.TokenOauth;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.DFACodeDto;
-import com.davalores.crypto.orchestrator.infra.adapter.in.dto.OauthTokenResponseDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.LoginMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,9 +36,9 @@ public class LoginDFAController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<OauthTokenResponseDto>  run(HttpServletRequest request, @RequestBody DFACodeDto dto) {
+	public ResponseEntity<TokenOauth>  run(HttpServletRequest request, @RequestBody DFACodeDto dto) {
 		log.debug("inputParam -> {}", dto);
-		OauthTokenResponseDto response = null;
+		TokenOauth response = null;
 		
 		if ( dto == null || dto.getCodigo() == null)
 			throw new LoginException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe incluir un codigo de validacion de 2FA");

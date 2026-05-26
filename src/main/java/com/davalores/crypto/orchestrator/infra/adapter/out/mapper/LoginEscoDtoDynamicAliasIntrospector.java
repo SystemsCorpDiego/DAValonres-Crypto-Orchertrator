@@ -13,7 +13,9 @@ public class LoginEscoDtoDynamicAliasIntrospector extends JacksonAnnotationIntro
 	private static final long serialVersionUID = 34600728324292221L;
 	private final Map<String, List<String>> aliasMap = Map.of(
 	        "setId", List.of("userID"),
-	        "setTipo", List.of("userType")	        
+	        "setTipo", List.of("userType"),        
+	        "setNombre", List.of("userName"),
+	        "setAccessToken", List.of("access_token")
 	    );
 	
 	

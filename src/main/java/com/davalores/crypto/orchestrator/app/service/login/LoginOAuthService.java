@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.LoginOAuthPortIn;
 import com.davalores.crypto.orchestrator.app.port.out.EncriptadorClaveServicePortOut;
+import com.davalores.crypto.orchestrator.app.port.out.GetDetalleCuentaEscoPortOut;
 import com.davalores.crypto.orchestrator.app.port.out.LoginEscoBolsaPortOut;
 import com.davalores.crypto.orchestrator.app.port.out.UsuarioRepositoryPortOut;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.JWTokenBo;
+import com.davalores.crypto.orchestrator.domain.model.DetalleCuentaEsco;
+import com.davalores.crypto.orchestrator.domain.model.LoginOauth;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.UsuarioEsco;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
@@ -26,111 +29,145 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 	private final LoginEscoBolsaPortOut loginEscoBolsa;
 	private final UsuarioRepositoryPortOut usuarioRepository;
 	private final GenerarTokenService generarToken;
+	private final GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut;
 	private final EncriptadorClaveServicePortOut encriptadorClaveService;
 	
 	public LoginOAuthService(LoginEscoBolsaPortOut loginEscoBolsa, UsuarioRepositoryPortOut usuarioRepository,
 			GenerarTokenService generarToken, 
-			EncriptadorClaveServicePortOut encriptadorClaveService) {
+			EncriptadorClaveServicePortOut encriptadorClaveService, GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut) {
 		this.loginEscoBolsa = loginEscoBolsa;
 		this.usuarioRepository = usuarioRepository;
 		this.generarToken = generarToken;
+		this.getDetalleCuentaEscoPortOut = getDetalleCuentaEscoPortOut;
 		this.encriptadorClaveService = encriptadorClaveService;
 	}
 	
 	@Override
-	public JWTokenBo run(String usuaDescrip, String clave) {
+	public LoginOauth run(String usuaDescrip, String clave) {
+		//JWTokenBo 
 		log.debug("InputParam -> usuaDescrip: {} clave: {}", usuaDescrip, clave);
 		Optional<JWTokenBo> token = Optional.empty();
+		LoginOauth loginOauth = null;
 		
 		if ( usuaDescrip == null)
 			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar un Usuario");
 		if ( clave == null)
 			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar un Clave");
 		
-		Optional<Usuario> usuario = usuarioRepository.getByUsuario(usuaDescrip);
 
-		// 1) login al middleware
-		if (loginMW(usuario, clave)) {
-			token = generoToken(usuario, clave);
-			log.debug("login middleware - OK");
-		} else {
-			log.debug("login middleware - FAIL");
-		}
+		//1) Busco usuario en MW
+		Optional<Usuario> usuarioMW = usuarioRepository.findByUsuario(usuaDescrip);
 		
-		if ( usuario.isPresent() && token.isPresent() ) {
-			log.debug("outputParam - login middleware -> token {}", token.get());
-			return token.get();
-		}
-		 
-		
-		// 2) login a esco
-		UsuarioEsco usuarioEsco = null;
+
+		//2) Me logeo a ESCO
+		UsuarioEsco usuarioEsco = null;		
+		DetalleCuentaEsco detalleCuentaEsco = null;
 		try {
 			usuarioEsco = loginEscoBolsa.run(usuaDescrip, clave);
-		} catch (LoginException el) {
-			if (el.getCodigo().equals(ErrorCodeEnum.CONFIGURATION_ERROR.toString())) {
-				throw el;
-			}
 		} catch (Exception e) {
-            log.error("Error al loguear a VisualBolsa: " + e.toString());
+            log.error("Error al loguear a ESCO: " + e.toString());
             usuarioEsco = null;
 		}
-		
-		if ( usuarioEsco!=null ) {
-			if ( usuario.isPresent() ) {
-				if ( usuario.get().getDfa() ) {
-					token = Optional.of( generarToken.runParcial(usuario.get().getId().toString(), usuario.get().getDescripcion()) );
-				} else {
-					token = Optional.of( generarToken.run(usuarioEsco.getId(), clave) );
-				}
-			} else {
-				log.debug("login ESCO - OK - Usuario MiddleWare Inexistente");
-				token = Optional.of( generarToken.run(usuarioEsco.getId(), clave) );
-			} 
+
+		if ( usuarioEsco != null ) {
+			//3) Traigo Detalle Cuenta ESCO
+			detalleCuentaEsco = getDetalleCuentaEscoPortOut.run( usuarioEsco.getAccessToken() );			
+			
+			if ( (usuarioEsco.getNombre() == null || usuarioEsco.getNombre().equals(usuaDescrip) )
+					&& detalleCuentaEsco != null 
+					&& detalleCuentaEsco.getComitenteDescripcion() != null ) {
+				usuarioEsco.setNombre(detalleCuentaEsco.getComitenteDescripcion());
+			}
+			
+			//4) Actualizo usuario en MW => alta/modi.-
+			usuarioMW = actualizarUsuarioMW(usuarioMW, usuarioEsco);			
 		}
 		
-		if ( token.isPresent() ) {
-			log.debug("outputParam - login ESCO -> token {}", token.get());
-			return token.get();
-		}				
+		//5) Me logueo al MW 
+		loginMW(usuarioMW, clave);
 		
-		throw new LoginException(ErrorCodeEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Usuario o clave invalidos");		
+		//6) Genero token
+		token = generoToken(usuarioMW);
+		
+		
+		
+		if ( usuarioEsco == null && usuarioMW.get().getEscoId() != null )
+			throw new LoginException(ErrorCodeEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Usuario o clave inválidos (4)");
+		if ( usuarioMW.isEmpty())
+			throw new LoginException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Usuario o clave inválidos (5)");
+		if ( token.isEmpty())
+			throw new LoginException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Usuario o clave inválidos (6)");
+		
+						
+		loginOauth = new LoginOauth();
+		loginOauth.setToken(token.get().getToken());
+		loginOauth.setTokenRefresco(token.get().getTokenRefresco());
+		loginOauth.setCuentaEsco(detalleCuentaEsco);
+		
+		log.debug("outputParam -> {}", loginOauth);		
+		return loginOauth; 
 	}
 	
 	
-	private Optional<JWTokenBo> generoToken(Optional<Usuario> usuario, String clave) {
+	private Optional<JWTokenBo> generoToken(Optional<Usuario> usuario) {
+		//, String clave
+
 		JWTokenBo token = null;
 		if ( usuario.get().getDfa() ) {
-			//genero token parcial		
-			token = generarToken.runParcial(usuario.get().getId().toString(), usuario.get().getDescripcion());				
+			token = generarToken.runParcial(usuario.get().getId().toString(), usuario.get().getUsuario());				
 		} else {
-			// genero token normal
-			token = generarToken.run(usuario.get().getId().toString(), clave);
+			token = generarToken.run(usuario.get().getId().toString(), usuario.get().getUsuario());
 		}
 		
 		return Optional.of(token);
 	}
 	
-	private boolean loginMW(Optional<Usuario> usuario, String clave) {		
+	private void loginMW(Optional<Usuario> usuario, String clave) {		
 		if (usuario.isEmpty())
-			return false;
+			throw new LoginException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Usuario o clave inválidos (1)");
 		
 		if (!usuario.get().getHabilitado())
 			throw new LoginException(ErrorCodeEnum.BUSINESS_ERROR.toString(), "Su cuenta de Usuario se encuentra deshabilitada. Por favor, contacte al administrador del sistema.");
 
-		if (usuario.get().getClave() == null) {
-			log.debug("Usuario {} sin clave en la base middleware", usuario.get().getDescripcion());
-			return false;
-		}
-				
-		if ( !encriptadorClaveService.validar(clave, usuario.get().getClave() ) ) {
-			log.debug("loginMW - Usuario {} con clave INVALIDA en middleware", usuario.get().getDescripcion());
-			return false;
-		}
 		
-		return true;
+		//Si no es Usuario ESCO, valido clave
+		if ( usuario.get().getEscoId() == null  ) {
+			if (usuario.get().getClave() == null ) {
+				throw new LoginException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Usuario o clave inválidos (2)");
+			}
+			
+			if ( !encriptadorClaveService.validar(clave, usuario.get().getClave() ) ) {
+				log.debug("loginMW - Usuario {} con clave INVALIDA en middleware", usuario.get().getUsuario());
+				throw new LoginException(ErrorCodeEnum.BUSINESS_ERROR.toString(), "Usuario o clave inválidos (3)");
+			}
+		}
 	}
 	
 	
+	private Optional<Usuario> actualizarUsuarioMW(Optional<Usuario> usuario, UsuarioEsco usuarioEsco ) {
+		Usuario usuarioNew;
+
+		if ( usuario.isEmpty() ) {
+			usuarioNew = new Usuario();
+			usuarioNew.setEscoId(usuarioEsco.getId());
+			usuarioNew.setUsuario(usuarioEsco.getUsuario());
+			usuarioNew.setDescripcion(usuarioEsco.getNombre()); //TODO: usar api ESCO de cuenta bancaria 
+
+			usuarioNew.setHabilitado(true);
+			usuarioNew.setDfa(false);
+			usuarioNew.setDfaSemilla(null);
+			usuarioNew.setRipioHabilitado(true);
+			usuarioNew.setRipioId(null);
+
+		} else {
+			usuarioNew = usuario.get();
+			usuarioNew.setEscoId(usuarioEsco.getId());
+			usuarioNew.setUsuario(usuarioEsco.getUsuario()); 
+		}
+		
+		usuarioNew = usuarioRepository.save(usuarioNew);
+		
+		return Optional.of(usuarioNew);		
+	}
 	
 }

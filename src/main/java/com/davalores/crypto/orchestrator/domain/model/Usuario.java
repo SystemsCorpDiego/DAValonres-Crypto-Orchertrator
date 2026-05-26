@@ -93,6 +93,14 @@ public class Usuario {
 	}
 	public void setRipioHabilitado(Boolean ripioHabilitado) {
 		this.ripioHabilitado = ripioHabilitado;
+	}
+
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", usuario=" + usuario + ", clave=" + clave + ", descripcion=" + descripcion
+				+ ", habilitado=" + habilitado + ", dfa=" + dfa + ", dfaSemilla=" + dfaSemilla + ", perfiles="
+				+ perfiles + ", escoId=" + escoId + ", ripioId=" + ripioId + ", ripioHabilitado=" + ripioHabilitado
+				+ "]";
 	} 
 
 	

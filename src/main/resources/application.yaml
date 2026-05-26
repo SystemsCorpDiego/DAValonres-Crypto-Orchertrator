@@ -27,6 +27,7 @@ apis:
       api-version: 9
       urls:
          login: /api/v9/login
+         detalleCuenta: /api/v9/get-detalle-cuenta
    crypto-provider:
       ripio:
         protocolo: http

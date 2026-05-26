@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.LoginOAuthPortIn;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.JWTokenBo;
+import com.davalores.crypto.orchestrator.domain.model.LoginOauth;
+import com.davalores.crypto.orchestrator.domain.model.TokenOauth;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
-import com.davalores.crypto.orchestrator.infra.adapter.in.dto.OauthTokenResponseDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.LoginMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,9 +38,9 @@ public class LoginOAuthController {
 		
 	
 	@PostMapping
-	public ResponseEntity<OauthTokenResponseDto>  run(HttpServletRequest request) {
+	public ResponseEntity<LoginOauth>  run(HttpServletRequest request) {
 		log.debug("run -> ");
-		OauthTokenResponseDto response = null;
+		TokenOauth response = null;
 
 		//saco usuario y clave
 		String usuario = getUsuarioFromRequest(request);
@@ -53,11 +54,11 @@ public class LoginOAuthController {
 
 		
 		//llamo al caso de uso 		
-		JWTokenBo dto = loginOAuth.run(usuario, clave);		
-		response = mapper.run(dto);
+		LoginOauth dto = loginOAuth.run(usuario, clave);		
+		//response = mapper.run(dto);
 		
-		log.debug("outputParam -> JWTokenBo: {}", response);
-		return ResponseEntity.ok(response);
+		log.debug("outputParam -> dto: {}", dto);
+		return ResponseEntity.ok(dto);
 	}
 	
 	

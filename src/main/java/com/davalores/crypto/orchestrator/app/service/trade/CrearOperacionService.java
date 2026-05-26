@@ -1,17 +1,12 @@
 package com.davalores.crypto.orchestrator.app.service.trade;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.davalores.crypto.orchestrator.app.port.in.trade.CrearOperacionPortIn;
 import com.davalores.crypto.orchestrator.app.port.out.CrearOperacionRipioPortOut;
-import com.davalores.crypto.orchestrator.app.port.out.JWTServicePortOut;
 import com.davalores.crypto.orchestrator.app.port.out.OperacionRepositoryPortOut;
-import com.davalores.crypto.orchestrator.app.port.out.UsuarioRepositoryPortOut;
-import com.davalores.crypto.orchestrator.app.service.common.jwt.JwtTokenData;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
+import com.davalores.crypto.orchestrator.app.service.usuario.GetTokenUsuarioService;
 import com.davalores.crypto.orchestrator.domain.model.CrearOperacion;
 import com.davalores.crypto.orchestrator.domain.model.Operacion;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
@@ -24,17 +19,17 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CrearOperacionService implements CrearOperacionPortIn {
 
-	private final String secreto;
-	private final UsuarioRepositoryPortOut usuarioRepository;
 	private final OperacionRepositoryPortOut operacionRepository;
 	private final CrearOperacionRipioPortOut crearOperacionRipioPortOut;
+	private final GetTokenUsuarioService getTokenUsuarioService;
 	
-	public CrearOperacionService(@Value("${login.token.secreto}") String secreto, 
-			UsuarioRepositoryPortOut usuarioRepository, CrearOperacionRipioPortOut crearOperacionRipioPortOut, OperacionRepositoryPortOut operacionRepository) {
-		this.secreto = secreto;
-		this.usuarioRepository = usuarioRepository;
+	public CrearOperacionService( 
+			CrearOperacionRipioPortOut crearOperacionRipioPortOut, 
+			OperacionRepositoryPortOut operacionRepository,
+			GetTokenUsuarioService getTokenUsuarioService) {
 		this.operacionRepository = operacionRepository;
 		this.crearOperacionRipioPortOut = crearOperacionRipioPortOut;
+		this.getTokenUsuarioService = getTokenUsuarioService;
 	}
 	
 	
@@ -43,18 +38,11 @@ public class CrearOperacionService implements CrearOperacionPortIn {
 		// TODO sacar usuarioId del token, recuperar ripio_id del usuario,  y luego llamar a Ripio para crear la operacion
 		log.debug("inputParam -> authToken: {} - dto: {}", authToken, dto);
 		
-		//Valida que sea TokenTipoEnum.AUTENTICACION_PARCIAL y recupera el usuarioId del claim
-		Optional<JwtTokenData> jwtTokenData = JWTServicePortOut.parseToken(authToken, secreto, TokenTipoEnum.NORMAL);		
-		if ( !jwtTokenData.isPresent() )
-			throw new BusinessException(ErrorCodeEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Token invalido (1)");
-		dto.setUsuarioId(jwtTokenData.get().usuarioId);
+		Usuario usuarioLogin = getTokenUsuarioService.run(authToken, TokenTipoEnum.NORMAL);		
 		
-		Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-				.orElseThrow(() -> new BusinessException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Token invalido (2): Id de Uusuario mal configurado."));
-		
-		if ( usuario.getRipioId() == null )
+		if ( usuarioLogin.getRipioId() == null )
 			throw new BusinessException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "El usuario no tiene asociado un RipioId");
-		dto.setRipioId(usuario.getRipioId());
+		dto.setRipioId(usuarioLogin.getRipioId());
 
 		Operacion operacion = crearOperacionRipioPortOut.run(dto);
 		
