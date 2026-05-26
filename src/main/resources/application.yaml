@@ -28,6 +28,7 @@ apis:
       urls:
          login: /api/v9/login
          detalleCuenta: /api/v9/get-detalle-cuenta
+         tenencias: /api/v9/get-tenenciaval
    crypto-provider:
       ripio:
         protocolo: http

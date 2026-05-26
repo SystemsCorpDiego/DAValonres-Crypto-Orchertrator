@@ -9,15 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.CrearDfaTokenPortIn;
 import com.davalores.crypto.orchestrator.app.port.out.QrCodeServicePortOut;
-import com.davalores.crypto.orchestrator.app.service.common.jwt.JwtTokenData;
-import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
 import com.davalores.crypto.orchestrator.domain.model.DfaToken;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
-import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.infra.adapter.out.CypherServiceAdapterOut;
-import com.davalores.crypto.orchestrator.infra.adapter.out.JWTServiceAdapterOut;
 import com.davalores.crypto.orchestrator.infra.adapter.out.UsuarioJpaRepositoryAdapterOut;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,21 +23,21 @@ import lombok.extern.slf4j.Slf4j;
 public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 
 	private final String issuer;
-	private final String secreto;
 	private final CypherServiceAdapterOut cypherService;
 	private final QrCodeServicePortOut qrCodeService;
 	private final UsuarioJpaRepositoryAdapterOut usuarioRepository;
+	private final GetLoginTokenUsuarioId getLoginTokenUsuarioId;
 
 	
 	public CrearDfaTokenService(CypherServiceAdapterOut cypherService, 
 			UsuarioJpaRepositoryAdapterOut usuarioRepository, 
-			@Value("${login.dfa.issuer:DAV}") String issuer, QrCodeServicePortOut qrCodeService,
-			@Value("${login.token.secreto}") String secreto) {
+			GetLoginTokenUsuarioId getLoginTokenUsuarioId,
+			@Value("${login.dfa.issuer:DAV}") String issuer, QrCodeServicePortOut qrCodeService) {
 		this.cypherService = cypherService;
 		this.qrCodeService = qrCodeService;
 		this.usuarioRepository = usuarioRepository;
-		this.issuer = issuer;
-		this.secreto = secreto;
+		this.getLoginTokenUsuarioId = getLoginTokenUsuarioId;
+		this.issuer = issuer;		
 	}
 	
 	@Override
@@ -75,11 +71,8 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 	public DfaToken run(String token) {
 		log.debug("inputParam -> {}", token);
 		
-		Optional<JwtTokenData> jwtTokenData = JWTServiceAdapterOut.parseToken(token, secreto, TokenTipoEnum.NORMAL);
-		if (!jwtTokenData.isPresent())
-			throw new LoginException(ErrorCodeEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Token invalido (1)");			
 	
-		Integer usuarioId = jwtTokenData.get().getUsuarioId();
+		Integer usuarioId = getLoginTokenUsuarioId.run(token);
 		
 		log.debug("outputParam -> {}", usuarioId);
 		return run( usuarioId );

@@ -114,6 +114,9 @@ public class GetDetalleCuentaEscoAdapterOut implements GetDetalleCuentaEscoPortO
 				detalleCuentaEsco.setCuit( detalleCuentaEscoDto.getData().getFirst().getCuentaDetalle().getCuit() );
 			}
 			
+			if ( detalleCuentaEsco == null)
+				throw new DetalleCuentaEscoException(ErrorCodeEnum.HTTP_NOT_FOUND.toString(), "No se pudo recuperar la cuenta ESCO");
+			
 			
 			return detalleCuentaEsco;			
 		} catch (JsonMappingException e) {

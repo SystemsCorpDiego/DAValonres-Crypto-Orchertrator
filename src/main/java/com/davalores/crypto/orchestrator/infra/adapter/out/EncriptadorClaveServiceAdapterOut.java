@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class EncriptadorClaveServiceAdapterOut implements EncriptadorClaveServicePortOut {
 
+	org.springframework.security.crypto.encrypt.BouncyCastleAesCbcBytesEncryptor aux;
+	
 	//Implementacion de Algoritmo BCrypt para cifrar contraseñas de manera unidireccional
 	private final BCryptPasswordEncoder encoder;
 

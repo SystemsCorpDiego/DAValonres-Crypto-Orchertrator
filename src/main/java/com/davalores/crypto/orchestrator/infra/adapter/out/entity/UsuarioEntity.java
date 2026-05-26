@@ -42,7 +42,8 @@ public class UsuarioEntity {
     )
 	private Set<PerfilEntity> perfiles = new HashSet<>(); 
 	
-	private String escoId; 
+	private String escoId;
+	private String claveEsco; 
 	private String ripioId; 
 	private Boolean ripioHabilitado; 
 	

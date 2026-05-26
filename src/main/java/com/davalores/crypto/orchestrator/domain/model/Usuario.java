@@ -18,7 +18,8 @@ public class Usuario {
 	
 	private Set<Perfil> perfiles = new HashSet<>(); 
 	
-	private String escoId; 
+	private String escoId;
+	private String claveEsco;	
 	private String ripioId; 
 	private Boolean ripioHabilitado;
 	
@@ -93,16 +94,20 @@ public class Usuario {
 	}
 	public void setRipioHabilitado(Boolean ripioHabilitado) {
 		this.ripioHabilitado = ripioHabilitado;
+	}	
+	public String getClaveEsco() {
+		return claveEsco;
+	}
+	public void setClaveEsco(String claveEsco) {
+		this.claveEsco = claveEsco;
 	}
 
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", usuario=" + usuario + ", clave=" + clave + ", descripcion=" + descripcion
 				+ ", habilitado=" + habilitado + ", dfa=" + dfa + ", dfaSemilla=" + dfaSemilla + ", perfiles="
-				+ perfiles + ", escoId=" + escoId + ", ripioId=" + ripioId + ", ripioHabilitado=" + ripioHabilitado
-				+ "]";
-	} 
+				+ perfiles + ", escoId=" + escoId + ", claveEsco=" + claveEsco + ", ripioId=" + ripioId
+				+ ", ripioHabilitado=" + ripioHabilitado + "]";
+	}
 
-	
-	
 }

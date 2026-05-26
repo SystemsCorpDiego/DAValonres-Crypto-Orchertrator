@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.LoginOAuthPortIn;
-import com.davalores.crypto.orchestrator.app.service.common.jwt.JWTokenBo;
 import com.davalores.crypto.orchestrator.domain.model.LoginOauth;
-import com.davalores.crypto.orchestrator.domain.model.TokenOauth;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.LoginMapper;
@@ -26,13 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginOAuthController {
 
 	private String tokenHeader;
-	private LoginMapper mapper;
 	
 	private final LoginOAuthPortIn loginOAuth;
 	
 	public LoginOAuthController(LoginOAuthPortIn loginOAuth, @Value("${login.token.header}") String tokenHeader, LoginMapper mapper) {
 		this.loginOAuth = loginOAuth;
-		this.mapper = mapper;
 		this.tokenHeader = tokenHeader;
 	}
 		
@@ -40,7 +36,6 @@ public class LoginOAuthController {
 	@PostMapping
 	public ResponseEntity<LoginOauth>  run(HttpServletRequest request) {
 		log.debug("run -> ");
-		TokenOauth response = null;
 
 		//saco usuario y clave
 		String usuario = getUsuarioFromRequest(request);

@@ -17,6 +17,7 @@ import com.davalores.crypto.orchestrator.domain.model.UsuarioEsco;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
+import com.davalores.crypto.orchestrator.infra.adapter.out.CypherServiceAdapterOut;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,15 +32,17 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 	private final GenerarTokenService generarToken;
 	private final GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut;
 	private final EncriptadorClaveServicePortOut encriptadorClaveService;
+	private final CypherServiceAdapterOut cypherServiceAdapterOut;
 	
 	public LoginOAuthService(LoginEscoBolsaPortOut loginEscoBolsa, UsuarioRepositoryPortOut usuarioRepository,
 			GenerarTokenService generarToken, 
-			EncriptadorClaveServicePortOut encriptadorClaveService, GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut) {
+			EncriptadorClaveServicePortOut encriptadorClaveService, GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut, CypherServiceAdapterOut cypherServiceAdapterOut) {
 		this.loginEscoBolsa = loginEscoBolsa;
 		this.usuarioRepository = usuarioRepository;
 		this.generarToken = generarToken;
 		this.getDetalleCuentaEscoPortOut = getDetalleCuentaEscoPortOut;
 		this.encriptadorClaveService = encriptadorClaveService;
+		this.cypherServiceAdapterOut = cypherServiceAdapterOut;
 	}
 	
 	@Override
@@ -152,7 +155,8 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 			usuarioNew.setEscoId(usuarioEsco.getId());
 			usuarioNew.setUsuario(usuarioEsco.getUsuario());
 			usuarioNew.setDescripcion(usuarioEsco.getNombre()); //TODO: usar api ESCO de cuenta bancaria 
-
+			usuarioNew.setClaveEsco(cypherServiceAdapterOut.encriptar(usuarioEsco.getClave()));			
+			
 			usuarioNew.setHabilitado(true);
 			usuarioNew.setDfa(false);
 			usuarioNew.setDfaSemilla(null);
@@ -163,6 +167,7 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 			usuarioNew = usuario.get();
 			usuarioNew.setEscoId(usuarioEsco.getId());
 			usuarioNew.setUsuario(usuarioEsco.getUsuario()); 
+			usuarioNew.setClaveEsco(cypherServiceAdapterOut.encriptar(usuarioEsco.getClave()));			
 		}
 		
 		usuarioNew = usuarioRepository.save(usuarioNew);
