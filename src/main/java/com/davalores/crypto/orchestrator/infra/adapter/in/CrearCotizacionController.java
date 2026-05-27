@@ -13,11 +13,18 @@ import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CotizacionDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearCotizacionDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.CotizacionMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+
+
+@Tag(name = "4) Operación Crypto", description = " ")
+@SecurityRequirement(name = "basicAuth")
 
 @Slf4j
 @RestController
-@RequestMapping("/crypto-providers/cotizar")
+@RequestMapping("/providers/cotizar")
 public class CrearCotizacionController {
 
 	
@@ -29,6 +36,9 @@ public class CrearCotizacionController {
 		this.mapper = mapper;
 	}
 	
+	
+	@Operation(summary = "Crea una Cotización Ripio para la moneda indicada." )	
+
 	@GetMapping
 	public ResponseEntity<CotizacionDto> run(@RequestBody CrearCotizacionDto dto) {
 		log.debug("inputParam -> {}", dto);

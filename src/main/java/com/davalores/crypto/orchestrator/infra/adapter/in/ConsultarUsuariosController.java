@@ -12,7 +12,14 @@ import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.UsuarioDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.UsuarioMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+
+@Tag(name = "2) Administración de Usuarios", description = " ")
+
+@SecurityRequirement(name = "bearerAuth")
 
 @Slf4j
 @RestController
@@ -27,6 +34,9 @@ public class ConsultarUsuariosController {
 		this.mapper = mapper;
 	}
 	
+	
+	@Operation(summary = "Consulta de Usuarios del MiddleWare." )	
+
 	@GetMapping
 	public ResponseEntity<List<UsuarioDto>> run() {
 		log.debug("run -> ");

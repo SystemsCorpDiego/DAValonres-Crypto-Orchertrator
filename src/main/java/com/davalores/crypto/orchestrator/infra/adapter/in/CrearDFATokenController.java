@@ -11,12 +11,19 @@ import com.davalores.crypto.orchestrator.domain.model.DfaToken;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.DfaTokenDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.DfaTokenMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
+
+@Tag(name = "2) Administración de Usuarios", description = " ")
+@SecurityRequirement(name = "basicAuth")
+
 @Slf4j
 @RestController
-@RequestMapping("/usuarios/dfa")
+@RequestMapping("/usuarios/dfa/semilla")
 public class CrearDFATokenController {
 	
 	/*
@@ -36,6 +43,9 @@ public class CrearDFATokenController {
 		this.tokenHeader = tokenHeader;
 	}
 	
+	
+	@Operation(summary = "Crea una semilla para login 2FA y la asocia al Usuario logueado." )	
+
 	@PostMapping()
 	public ResponseEntity<DfaTokenDto> run(HttpServletRequest request) {
 		log.debug("inputParam -> ");

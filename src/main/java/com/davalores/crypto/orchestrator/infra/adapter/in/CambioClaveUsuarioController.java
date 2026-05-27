@@ -14,8 +14,14 @@ import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CambioClaveUsuarioDto;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+
+@Tag(name = "2) Administración de Usuarios", description = " ")
+@SecurityRequirement(name = "basicAuth")
 
 @Slf4j
 @RestController
@@ -31,6 +37,9 @@ public class CambioClaveUsuarioController {
 		this.tokenHeader = tokenHeader;
 	}
 	
+	
+	@Operation(summary = "Gestiona la actualización de Clave para el Usuario indicado. " )	
+
 	@PutMapping("/cambiar-clave")
 	public ResponseEntity<?> run(HttpServletRequest request, @PathVariable("usuarioId")  Integer usuarioId, @RequestBody CambioClaveUsuarioDto dto) {
 		log.debug("inputParam -> {}", dto);

@@ -12,7 +12,13 @@ import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearUsuarioDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.UsuarioDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.UsuarioMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+
+@Tag(name = "2) Administración de Usuarios", description = " ")
+@SecurityRequirement(name = "basicAuth")
 
 @Slf4j
 @RestController
@@ -31,6 +37,9 @@ public class CrearUsuarioController {
 		this.mapper = mapper;
 	}
 	
+	
+	@Operation(summary = "Crea Usuario Middleware. Estos usuario no pertenecen a ESCO y por lo tanto no están habilitados a operar con Ripio." )	
+
 	@PostMapping
 	public ResponseEntity<UsuarioDto> run(@RequestBody CrearUsuarioDto dto) {
 		log.debug("inputParam -> {}", dto);

@@ -9,8 +9,13 @@ server:
      #    enabled: always   
 logging:
    level:
-      root: ERROR
+      root: TRACE
       com:
          davalores: TRACE
+         zaxxer:
+            hikari: ERROR
+      org:
+         apache:
+            tomcat: ERROR      				 		 
    pattern:
       console: "%clr(%d{mm:ss.SSS}){yellow} %clr(%.-3level) %clr(%-35.35logger{0}) %msg %n"

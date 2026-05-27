@@ -14,13 +14,19 @@ import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearOperacionDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.OperacionMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 
+@Tag(name = "4) Operación Crypto", description = " ")
+@SecurityRequirement(name = "basicAuth")
+
 @Slf4j
 @RestController
-@RequestMapping("/crypto-providers/operacion")
+@RequestMapping("/providers/operacion")
 public class CrearOperacionController {
 
 	private final String tokenHeader;
@@ -34,7 +40,10 @@ public class CrearOperacionController {
 		this.mapper = mapper;
 	}
 	
-	@PostMapping("COMPRA")
+	
+	@Operation(summary = "Crea una Operación de Compra en Ripio para el usuario logueado utilizando la cotización indicada en el json-body del request." )	
+
+	@PostMapping("/compra")
 	public ResponseEntity<?> runCompra(HttpServletRequest request, @RequestBody CrearOperacionDto dto) {
 		if ( dto == null )
 			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "El cuerpo de la solicitud no puede ser nulo");
@@ -43,7 +52,10 @@ public class CrearOperacionController {
 		return this.run(request, dto);
 	}
 	
-	@PostMapping("VENTA")
+
+	@Operation(summary = "Crea una Operación de Venta en Ripio para el usuario logueado utilizando la cotización indicada en el json-body del request." )	
+
+	@PostMapping("/venta")
 	public ResponseEntity<?> runVenta(HttpServletRequest request, @RequestBody CrearOperacionDto dto) {
 		if ( dto == null )
 			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "El cuerpo de la solicitud no puede ser nulo");

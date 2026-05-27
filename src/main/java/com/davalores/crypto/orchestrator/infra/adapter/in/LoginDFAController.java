@@ -16,8 +16,14 @@ import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.DFACodeDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.LoginMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+
+@Tag(name = "1) Login Auth", description = " ")
+@SecurityRequirement(name = "basicAuth")
 
 @Slf4j
 @RestController
@@ -34,6 +40,9 @@ public class LoginDFAController {
 		this.mapper = mapper;
 		this.loginDFA = loginDFA;
 	}
+	
+	
+	@Operation(summary = "Login 2FA " )	
 	
 	@PostMapping
 	public ResponseEntity<TokenOauth>  run(HttpServletRequest request, @RequestBody DFACodeDto dto) {

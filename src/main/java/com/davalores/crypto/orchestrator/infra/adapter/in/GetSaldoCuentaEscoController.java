@@ -11,8 +11,15 @@ import com.davalores.crypto.orchestrator.domain.model.SaldoCuentaEsco;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.SaldoEscoDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.SaldoCuentaMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+
+@Tag(name = "3) Gestión", description = " ")
+@SecurityRequirement(name = "basicAuth")
+
 
 @Slf4j
 @RestController
@@ -32,6 +39,8 @@ public class GetSaldoCuentaEscoController {
 	}
 	
 	
+	@Operation(summary = "Consulta de Saldo ESCO del usuario logueado" )	
+
 	@GetMapping
 	public ResponseEntity<SaldoEscoDto> run(HttpServletRequest request) {
 		log.debug("inputParam -> NULL");

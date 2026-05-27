@@ -8,8 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.ConfirmarDFATokenPortIn;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+
+
+@Tag(name = "2) Administración de Usuarios", description = " ")
+@SecurityRequirement(name = "basicAuth")
 
 @Slf4j
 @RestController
@@ -31,7 +38,10 @@ public class ConfirmarDFATokenController {
 	}
 	
 	
-	@PutMapping("/habilitar/FALSE")
+	
+	@Operation(summary = "El Usuario logueado confirma la habilitación de la semilla 2FA previamente solicida. Esta acción activa el login con 2FA para el Usuario." )	
+
+	@PutMapping("/habilitar")
 	public ResponseEntity<?> habilitar(HttpServletRequest request) {		
 		log.debug("inputParam -> ");
 		String token = getAuthToken(request);
@@ -43,7 +53,7 @@ public class ConfirmarDFATokenController {
 		return ResponseEntity.ok(null);
 	}
 
-	@PutMapping("/habilitar/TRUE")
+	@PutMapping("/deshabilitar")
 	public ResponseEntity<?> deshabilitar(HttpServletRequest request) {
 		log.debug("run -> ");
 

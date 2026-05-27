@@ -20,6 +20,10 @@ spring:
             dialect: org.hibernate.dialect.SQLServerDialect
          database-platform: org.hibernate.dialect.SQLServerDialect
       show-sql: true
+springdoc:
+   swagger-ui:
+      operations-sorter: alpha
+      tags-sorter: alpha
 apis:
    esco-bolsa:
       protocolo: http

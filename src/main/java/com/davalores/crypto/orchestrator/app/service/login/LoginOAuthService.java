@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.LoginOAuthPortIn;
+import com.davalores.crypto.orchestrator.app.port.in.usuario.CrearClienteRipioPortIn;
 import com.davalores.crypto.orchestrator.app.port.out.EncriptadorClaveServicePortOut;
 import com.davalores.crypto.orchestrator.app.port.out.GetDetalleCuentaEscoPortOut;
 import com.davalores.crypto.orchestrator.app.port.out.LoginEscoBolsaPortOut;
@@ -33,16 +34,22 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 	private final GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut;
 	private final EncriptadorClaveServicePortOut encriptadorClaveService;
 	private final CypherServiceAdapterOut cypherServiceAdapterOut;
+	private final CrearClienteRipioPortIn crearClienteRipioPortIn;
 	
-	public LoginOAuthService(LoginEscoBolsaPortOut loginEscoBolsa, UsuarioRepositoryPortOut usuarioRepository,
+	public LoginOAuthService(LoginEscoBolsaPortOut loginEscoBolsa, 
+			UsuarioRepositoryPortOut usuarioRepository,
 			GenerarTokenService generarToken, 
-			EncriptadorClaveServicePortOut encriptadorClaveService, GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut, CypherServiceAdapterOut cypherServiceAdapterOut) {
+			EncriptadorClaveServicePortOut encriptadorClaveService, 
+			GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut, 
+			CypherServiceAdapterOut cypherServiceAdapterOut,
+			CrearClienteRipioPortIn crearClienteRipioPortIn) {
 		this.loginEscoBolsa = loginEscoBolsa;
 		this.usuarioRepository = usuarioRepository;
 		this.generarToken = generarToken;
 		this.getDetalleCuentaEscoPortOut = getDetalleCuentaEscoPortOut;
 		this.encriptadorClaveService = encriptadorClaveService;
 		this.cypherServiceAdapterOut = cypherServiceAdapterOut;
+		this.crearClienteRipioPortIn = crearClienteRipioPortIn;
 	}
 	
 	@Override
@@ -84,12 +91,17 @@ public class LoginOAuthService implements LoginOAuthPortIn {
 			
 			//4) Actualizo usuario en MW => alta/modi.-
 			usuarioMW = actualizarUsuarioMW(usuarioMW, usuarioEsco);			
+			
+			//5) Si el usuario ESCO no tiene usuario Ripio en MW => alta.-
+			if ( usuarioMW.get().getRipioId() == null )
+				crearClienteRipioPortIn.run(usuarioMW.get().getId());
+
 		}
 		
-		//5) Me logueo al MW 
+		//6) Me logueo al MW 
 		loginMW(usuarioMW, clave);
 		
-		//6) Genero token
+		//7) Genero token
 		token = generoToken(usuarioMW);
 		
 		
