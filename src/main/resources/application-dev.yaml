@@ -14,6 +14,7 @@ logging:
          davalores: TRACE
          zaxxer:
             hikari: ERROR
+         microsoft: ERROR
       org:
          apache:
             tomcat: ERROR      				 		 

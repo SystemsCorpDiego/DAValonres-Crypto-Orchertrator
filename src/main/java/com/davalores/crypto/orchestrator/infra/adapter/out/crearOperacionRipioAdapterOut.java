@@ -75,6 +75,9 @@ public class crearOperacionRipioAdapterOut implements CrearOperacionRipioPortOut
 		    // Handle 404 specifically
 		    log.error("Resource not found: " + e.getMessage());		    
 		    throw new OperacionException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
+		} catch (HttpClientErrorException.BadRequest | HttpClientErrorException.Forbidden e ) {
+			log.error("BadRequest/Forbidden: " + e.getMessage());	
+			throw e;
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
 			log.error("HTTP Error: " + e.getStatusCode());

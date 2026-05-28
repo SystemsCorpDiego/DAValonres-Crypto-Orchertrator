@@ -1,7 +1,7 @@
 package com.davalores.crypto.orchestrator.infra.adapter.in;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +39,7 @@ public class CrearCotizacionController {
 	
 	@Operation(summary = "Crea una Cotización Ripio para la moneda indicada." )	
 
-	@GetMapping
+	@PostMapping
 	public ResponseEntity<CotizacionDto> run(@RequestBody CrearCotizacionDto dto) {
 		log.debug("inputParam -> {}", dto);
 		CotizacionSolicitud cotizacionSolicitud = mapper.run(dto);

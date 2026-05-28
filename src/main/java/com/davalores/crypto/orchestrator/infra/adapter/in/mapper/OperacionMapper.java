@@ -4,7 +4,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.davalores.crypto.orchestrator.domain.model.CrearOperacion;
+import com.davalores.crypto.orchestrator.domain.model.Operacion;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearOperacionDto;
+import com.davalores.crypto.orchestrator.infra.adapter.in.dto.OperacionDto;
 
 @Mapper(componentModel = "spring")
 public interface OperacionMapper {
@@ -14,4 +16,5 @@ public interface OperacionMapper {
 	@Mapping(target = "cantidad", source = "cantidad")
 	CrearOperacion run(CrearOperacionDto dto);	 
 
+	OperacionDto run(Operacion dto);
 }

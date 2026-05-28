@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.orchestrator.app.port.in.trade.CrearOperacionPortIn;
 import com.davalores.crypto.orchestrator.domain.model.CrearOperacion;
+import com.davalores.crypto.orchestrator.domain.model.Operacion;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearOperacionDto;
+import com.davalores.crypto.orchestrator.infra.adapter.in.dto.OperacionDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.OperacionMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,7 +66,7 @@ public class CrearOperacionController {
 		return this.run(request, dto);
 	}
 	
-	private ResponseEntity<?> run(HttpServletRequest request, CrearOperacionDto dto ) {
+	private ResponseEntity<OperacionDto> run(HttpServletRequest request, CrearOperacionDto dto ) {
 		log.debug("inputParam -> {}", dto);
 		
 		if ( dto.getCantidad() == null )
@@ -74,12 +76,12 @@ public class CrearOperacionController {
 		
 		String authToken = getAuthToken(request);
 		
-		CrearOperacion reg = mapper.run(dto);
+		CrearOperacion reg = mapper.run(dto);		
+		Operacion operacion = portIn.run( authToken, reg );		
+		OperacionDto response = mapper.run(operacion);
 		
-		portIn.run( authToken, reg );
-		
-		log.debug("outParam -> null");
-		return ResponseEntity.ok(null);
+		log.debug("outParam -> {}", response);
+		return ResponseEntity.ok(response);
 	}
 	
 	private String getAuthToken(HttpServletRequest request) {

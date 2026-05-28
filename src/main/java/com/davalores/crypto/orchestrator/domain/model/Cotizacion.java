@@ -2,6 +2,7 @@ package com.davalores.crypto.orchestrator.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 
 public class Cotizacion {
@@ -11,7 +12,7 @@ public class Cotizacion {
 	private String activoCoti;
 	private BigDecimal compraComision;
 	private BigDecimal compraRatio;
-	private LocalDateTime expira;
+	private ZonedDateTime expira;
 	private String idExterno;
 	private String idExternoProveedor;
 	private BigDecimal ventaComision;
@@ -47,10 +48,11 @@ public class Cotizacion {
 	public void setCompraRatio(BigDecimal compraRatio) {
 		this.compraRatio = compraRatio;
 	}
-	public LocalDateTime getExpira() {
+	
+	public ZonedDateTime getExpira() {
 		return expira;
 	}
-	public void setExpira(LocalDateTime expira) {
+	public void setExpira(ZonedDateTime expira) {
 		this.expira = expira;
 	}
 	public String getIdExterno() {
