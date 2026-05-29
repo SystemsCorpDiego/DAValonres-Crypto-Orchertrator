@@ -45,7 +45,7 @@ login:
    token:
       header: Authorization
       secreto: Scre-to.159-AuZ-tero.753xFRD345dfr#456x
-      expiracion: 10000 #milisegundos 600000 
+      expiracion: 600000 #milisegundos 600000 
       isuer: DAValores
    tokenRefresco:
       expiracion: 1200000 
