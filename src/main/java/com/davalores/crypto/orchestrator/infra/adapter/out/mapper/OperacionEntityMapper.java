@@ -10,6 +10,8 @@ import com.davalores.crypto.orchestrator.infra.adapter.out.entity.OperacionEntit
 public interface OperacionEntityMapper {
 
 	@Mapping( target = "trxIdProveedor", source = "trxIdExternoProveedor" )
+	@Mapping( target = "idExternoCotizacion", source = "cotizacionId" )	
+	@Mapping( target = "proveedor", constant = "RIPIO" )	
 	public OperacionEntity run(Operacion operacion);
 	
 	public Operacion run(OperacionEntity operacion);

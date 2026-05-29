@@ -36,7 +36,7 @@ apis:
    crypto-provider:
       ripio:
         protocolo: http
-        dominio: localhost:8092
+        dominio: localhost:8093
         urls:
            cliente-alta: /cripto-provider/ripio/cliente/
            cotizacion-alta: /cripto-provider/ripio/cotizacion/
@@ -45,7 +45,7 @@ login:
    token:
       header: Authorization
       secreto: Scre-to.159-AuZ-tero.753xFRD345dfr#456x
-      expiracion: 600000 #milisegundos
+      expiracion: 5000 #milisegundos 600000 
       isuer: DAValores
    tokenRefresco:
       expiracion: 1200000 

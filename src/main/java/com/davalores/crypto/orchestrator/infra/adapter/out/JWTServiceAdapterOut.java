@@ -13,8 +13,11 @@ import org.springframework.util.Assert;
 import com.davalores.crypto.orchestrator.app.port.out.JWTServicePortOut;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.JwtTokenData;
 import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
+import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,8 @@ public class JWTServiceAdapterOut implements JWTServicePortOut {
 			//Map<String, Object> claims = Jwts.parser().setSigningKey(secret.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
 			Assert.notNull(claims, "Token inválido");
 			return Optional.of(claims);
+		} catch(ExpiredJwtException  ee) {
+			throw new LoginException(ErrorCodeEnum.HTTP_LOGIN_TIMEOUT_ERROR.toString(), "Token expirado");
 		} catch (Exception e) {
 			return Optional.empty();
 		}

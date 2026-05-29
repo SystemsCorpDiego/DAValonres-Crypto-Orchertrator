@@ -22,12 +22,12 @@ public class OperacionEntity {
 	Long id; 				
 	String idExterno;				// UUID de cryptoOrchestrator (DA Valores)
 	String idExternoProveedor; 		// UUID4 - Ident del proveedor (Ripio)
-	String idExternoCotizacion;
+	String idExternoCotizacion;	
 	String quoteId;
 	
 	@Column(name = "trx_id_proveedor")
-	String trxIdProveedor;
-	String idExternoCliente;
+	String trxIdProveedor;	
+	String idExternoCliente;	
 	BigDecimal ratio;
 	BigDecimal ratioMercado;
 	BigDecimal comision;
@@ -36,6 +36,7 @@ public class OperacionEntity {
 	String activoCoti;
 	BigDecimal activoCotiCantidad;
 	BigDecimal activoBaseCantidad;
+	
 	String proveedor; 		// "RIPIO"
 	String tipo;
 	Integer usuarioId; 		//FK a usuario (DA Valores)

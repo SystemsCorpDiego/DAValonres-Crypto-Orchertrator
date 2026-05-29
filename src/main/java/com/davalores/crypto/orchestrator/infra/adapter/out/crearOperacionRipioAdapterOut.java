@@ -5,7 +5,6 @@ import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,8 @@ import org.springframework.web.client.RestTemplate;
 import com.davalores.crypto.orchestrator.app.port.out.CrearOperacionRipioPortOut;
 import com.davalores.crypto.orchestrator.domain.model.CrearOperacion;
 import com.davalores.crypto.orchestrator.domain.model.Operacion;
+import com.davalores.crypto.orchestrator.domain.model.exception.CustomProblemDetail;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
-import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.domain.model.exception.OperacionException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -76,9 +75,24 @@ public class crearOperacionRipioAdapterOut implements CrearOperacionRipioPortOut
 		    log.error("Resource not found: " + e.getMessage());		    
 		    throw new OperacionException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
 		} catch (HttpClientErrorException.BadRequest | HttpClientErrorException.Forbidden e ) {
+			log.error("BadRequest(400)/Forbidden(403): " + e.getMessage());		
+			OperacionException customError = null;
+			try {
+				CustomProblemDetail problemDetail = e.getResponseBodyAs(CustomProblemDetail.class);				
+				customError = new OperacionException(problemDetail.getCodigo(), problemDetail.getDetail() );				
+			} catch(Exception e2) {
+				log.error(e2.toString());
+			}			
+			if ( customError != null ) 
+				throw customError;
+			throw e;
+		} 
+		/*
+		catch (HttpClientErrorException.PreconditionFailed e ) {
 			log.error("BadRequest/Forbidden: " + e.getMessage());	
 			throw e;
-		} catch (HttpStatusCodeException e) {
+		} */
+		catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
 			log.error("HTTP Error: " + e.getStatusCode());
 			//throw new LoginException("4xx / 5xx", "crearOperacionRipioAdapterOut() - HTTP Error: " + e.getMessage() );
@@ -97,7 +111,6 @@ public class crearOperacionRipioAdapterOut implements CrearOperacionRipioPortOut
 			jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			//jsonMapper.registerModule(new JavaTimeModule()); 
 			//jsonMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); 
-			jsonMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
 			jsonMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
 			
 			Operacion operacion = jsonMapper.readValue(response.getBody(), Operacion.class); 

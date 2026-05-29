@@ -43,6 +43,7 @@ public class CrearOperacionService implements CrearOperacionPortIn {
 		if ( usuarioLogin.getRipioId() == null )
 			throw new BusinessException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "El usuario no tiene asociado un RipioId");
 		dto.setRipioId(usuarioLogin.getRipioId());
+		dto.setUsuarioId(usuarioLogin.getId());
 
 		Operacion operacion = crearOperacionRipioPortOut.run(dto);
 		

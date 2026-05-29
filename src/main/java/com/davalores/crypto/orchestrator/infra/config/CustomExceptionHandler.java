@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
+import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.domain.model.exception.TicketRuntimeException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error("TicketRuntimeException - " + ex.toString());	
 		
 		HttpStatus status = HttpStatus.PRECONDITION_FAILED;
+		if ( ex instanceof LoginException ) {
+			status = HttpStatus.UNAUTHORIZED;
+		}
+
 		String detalle;
 		if (ex.getDescripcion() != null && !ex.getDescripcion().isEmpty()) {
 			detalle = ex.getDescripcion();

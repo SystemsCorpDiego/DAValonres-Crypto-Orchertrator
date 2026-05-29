@@ -8,7 +8,7 @@ import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearUsuarioDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.UsuarioDto;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UsuarioMapper {
 
 	public Usuario run(CrearUsuarioDto dto);

@@ -30,6 +30,7 @@ public class GetTokenUsuarioService {
 
 	public Usuario run(String token, TokenTipoEnum tokenTipo) {
 		//Valida que sea TokenTipoEnum.AUTENTICACION_PARCIAL y recupera el usuarioId del claim
+
 		Optional<JwtTokenData> jwtTokenData = JWTServicePortOut.parseToken(token, secreto, tokenTipo);		
 		if ( !jwtTokenData.isPresent() ) {
 			if ( tokenTipo.equals(TokenTipoEnum.AUTENTICACION_PARCIAL) )
@@ -37,8 +38,15 @@ public class GetTokenUsuarioService {
 			throw new LoginException(ErrorCodeEnum.HTTP_UNAUTHORIZED_ERROR.toString(), "Token invalido (1)");
 		}
 		
-		//recupera el usuarioId del repository
-		Optional<Usuario> usuario = usuarioRepository.findById(jwtTokenData.get().usuarioId);
+		//recupera el usuario: tokenTipo=NORMAL => existe usuarioId. tokenTipo=PARCIAL => existe usuario.-
+		Optional<Usuario> usuario = null;
+		if ( jwtTokenData.get().usuarioId != null ) {			
+			usuario = usuarioRepository.findById(jwtTokenData.get().usuarioId);
+		} else { 
+			if ( jwtTokenData.get().usuario != null )
+				usuario = usuarioRepository.findByUsuario(jwtTokenData.get().usuario);
+		}
+		
 		if ( usuario.isEmpty() ) {
 			if ( tokenTipo.equals(TokenTipoEnum.AUTENTICACION_PARCIAL) )
 				throw new LoginDfaException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Usuario con id mal configurado. Token invalido (2)");

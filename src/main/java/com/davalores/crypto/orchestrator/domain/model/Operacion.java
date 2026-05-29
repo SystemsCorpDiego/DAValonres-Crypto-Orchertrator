@@ -9,6 +9,7 @@ public class Operacion {
 	String id; 				// UUID de cryptoOrchestrator (DA Valores)
 	String idExterno;
 	String idExternoProveedor; 		// UUID4 - Ident del proveedor (Ripio)
+	
 	String quoteId;	
 	String cotizacionId; 		//id de la Cotizacion usada en la Operacion
 	String trxIdExternoProveedor;

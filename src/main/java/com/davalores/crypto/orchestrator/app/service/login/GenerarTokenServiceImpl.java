@@ -29,7 +29,7 @@ public class GenerarTokenServiceImpl implements GenerarTokenService {
 	@Override
 	public JWTokenBo run(String usuarioId, String username) {
 		String token = crearTokenNormal(usuarioId, username);
-        String refreshToken = crearTokenRefresco(username);
+        String refreshToken = crearTokenRefresco(usuarioId, username);
         return new JWTokenBo(token, refreshToken);
 	}
 	
@@ -39,8 +39,9 @@ public class GenerarTokenServiceImpl implements GenerarTokenService {
         return new JWTokenBo(token, null);
 	}
 
-    private String crearTokenRefresco(String username) {
+    private String crearTokenRefresco(String usuarioId, String username) {
         Map<String, Object> claims = Map.of(
+        		"usuarioId", usuarioId,
         		JWTServicePortOut.getTokenClaimType(), TokenTipoEnum.REFRESH
         );
         return JWTServicePortOut.generate(claims, username, secreto, tokenRefrescoExpira);
