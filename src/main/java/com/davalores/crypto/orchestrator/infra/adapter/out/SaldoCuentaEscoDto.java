@@ -9,6 +9,8 @@ public class SaldoCuentaEscoDto {
 	private BigDecimal cantidad;
 	private String descripcion;
 	private String moneda;
+	private String tpActivo;
+	private String tpInstrumento;
 	
 	private SaldoCuentaPosicionCaucionesEscoDto posicionCauciones;
 
@@ -52,12 +54,27 @@ public class SaldoCuentaEscoDto {
 		this.posicionCauciones = posicionCauciones;
 	}
 
+	public String getTpActivo() {
+		return tpActivo;
+	}
+
+	public void setTpActivo(String tpActivo) {
+		this.tpActivo = tpActivo;
+	}
+
+	public String getTpInstrumento() {
+		return tpInstrumento;
+	}
+
+	public void setTpInstrumento(String tpInstrumento) {
+		this.tpInstrumento = tpInstrumento;
+	}
+
 	@Override
 	public String toString() {
 		return "SaldoCuentaEscoDto [abreviatura=" + abreviatura + ", cantidad=" + cantidad + ", descripcion="
-				+ descripcion + ", moneda=" + moneda + ", posicionCauciones=" + posicionCauciones + "]";
+				+ descripcion + ", moneda=" + moneda + ", tpActivo=" + tpActivo + ", tpInstrumento=" + tpInstrumento
+				+ ", posicionCauciones=" + posicionCauciones + "]";
 	}
-
-	 
 	
 }

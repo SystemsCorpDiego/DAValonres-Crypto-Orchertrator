@@ -1,6 +1,5 @@
 package com.davalores.crypto.orchestrator.infra.adapter.in;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,8 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.orchestrator.app.port.in.esco.GetSaldoCuentaEscoPortIn;
 import com.davalores.crypto.orchestrator.domain.model.SaldoCuentaEsco;
+import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.SaldoEscoDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.SaldoCuentaMapper;
+import com.davalores.crypto.orchestrator.infra.service.SessionLoginService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -26,14 +27,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/esco/saldo")
 public class GetSaldoCuentaEscoController {
 
-	private final String tokenHeader;
+	private final SessionLoginService sessionLoginService;
 	private final GetSaldoCuentaEscoPortIn portIn;
 	private final SaldoCuentaMapper mapper;
 	
 	public GetSaldoCuentaEscoController(GetSaldoCuentaEscoPortIn portIn,
-			@Value("${login.token.header}") String tokenHeader,
+			SessionLoginService sessionLoginService,
 			SaldoCuentaMapper mapper) {
-		this.tokenHeader = tokenHeader;
+		this.sessionLoginService = sessionLoginService;
 		this.portIn = portIn;
 		this.mapper = mapper;
 	}
@@ -46,22 +47,13 @@ public class GetSaldoCuentaEscoController {
 		log.debug("inputParam -> NULL");
 		SaldoEscoDto response = null;
 		
-		String token = getAuthToken(request);
-		SaldoCuentaEsco dto = portIn.run(token);
+		Usuario usuarioLogin = sessionLoginService.getUsuario(request);
+		SaldoCuentaEsco dto = portIn.run(usuarioLogin);
 		response = mapper.run(dto);
 		
 		log.debug("outputParam -> {}", response);
 		return ResponseEntity.ok(response);
 	}
 	
-	
-	private String getAuthToken(HttpServletRequest request) {
-		// recupero token del header Authorization
-		String auth = request.getHeader( tokenHeader );
-		//String token = auth.split(" ")[1];
-		String token = auth.replaceFirst("^Bearer ", "");
-		
-		return token;		
-	}
 	
 }

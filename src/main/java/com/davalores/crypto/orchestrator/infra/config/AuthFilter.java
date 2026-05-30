@@ -11,6 +11,8 @@ import com.davalores.crypto.orchestrator.app.service.usuario.GetTokenUsuarioServ
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
+import com.davalores.crypto.orchestrator.infra.service.SessionLoginService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -26,10 +28,13 @@ public class AuthFilter implements Filter {
 
     private String tokenHeader;
 	private final GetTokenUsuarioService getTokenUsuarioService;
+	private final SessionLoginService sessionLoginService;
 	
 	public AuthFilter(GetTokenUsuarioService getTokenUsuarioService, 
-			@Value("${login.token.header}") String tokenHeader) {
+			@Value("${login.token.header}") String tokenHeader,
+			SessionLoginService sessionLoginService) {
 		this.getTokenUsuarioService = getTokenUsuarioService;
+		this.sessionLoginService = sessionLoginService;
 		this.tokenHeader = tokenHeader;
 	}
 	
@@ -47,22 +52,16 @@ public class AuthFilter implements Filter {
             return; 
 		}
 		
-		
 		String token = extractToken(httpRequest);
-
-        if (token != null) {
-        	Usuario usuario = null;
-        	try {
-        		usuario = getTokenUsuarioService.run(token, TokenTipoEnum.NORMAL);
-        	} catch ( Exception e) {
-        		httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid credentials");
-                return;
-        	}
-            
-            httpRequest.setAttribute("token", token);
-            httpRequest.setAttribute("usuario", usuario.getUsuario());
-            httpRequest.setAttribute("usuarioId", usuario.getId());
-        }
+    	Usuario usuario = null;
+    	try {
+    		usuario = getTokenUsuarioService.run(token, TokenTipoEnum.NORMAL);
+    	} catch ( Exception e) {
+    		httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid credentials");
+            return;
+    	}
+        
+    	sessionLoginService.saveLogin(httpRequest, token, usuario);
         
         chain.doFilter(request, response);		
 	}

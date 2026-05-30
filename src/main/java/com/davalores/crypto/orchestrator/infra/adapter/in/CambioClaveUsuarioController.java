@@ -1,6 +1,5 @@
 package com.davalores.crypto.orchestrator.infra.adapter.in;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -9,10 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.orchestrator.app.port.in.usuario.CambioClaveUsuarioPortIn;
+import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
-import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CambioClaveUsuarioDto;
+import com.davalores.crypto.orchestrator.infra.service.SessionLoginService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -28,13 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("usuarios/{usuarioId}")
 public class CambioClaveUsuarioController {
 
-	private final String tokenHeader; 
+	private final SessionLoginService sessionLoginService;
 	private final CambioClaveUsuarioPortIn portIn;
 	
 	public CambioClaveUsuarioController(CambioClaveUsuarioPortIn portIn,
-			@Value("${login.token.header}") String tokenHeader) {
+			SessionLoginService sessionLoginService) {
 		this.portIn = portIn;
-		this.tokenHeader = tokenHeader;
+		this.sessionLoginService = sessionLoginService;
 	}
 	
 	
@@ -44,31 +44,17 @@ public class CambioClaveUsuarioController {
 	public ResponseEntity<?> run(HttpServletRequest request, @PathVariable("usuarioId")  Integer usuarioId, @RequestBody CambioClaveUsuarioDto dto) {
 		log.debug("inputParam -> {}", dto);
 		
+		Usuario usuarioLogin = sessionLoginService.getUsuario(request);
+		
 		if ( usuarioId == null )
 			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar un id de usuario");
 		if ( dto == null || dto.getClave()==null || dto.getClaveNueva()==null )
 			throw new BusinessException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe informar la clave actual junto a una nueva");
 		
-		String token = getAuthToken(request);
-		
-		portIn.run(token, usuarioId, dto);
+		portIn.run(usuarioLogin, usuarioId, dto);
 		
 		log.debug("outputParam ->  null" );
 		return ResponseEntity.ok(null);
 	}
 	
-	private String getAuthToken(HttpServletRequest request) {
-		// recupero token del header Authorization
-		String auth = request.getHeader( tokenHeader );
-		if (auth == null)
-			throw new LoginException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe incluir los parametros de Login");
-		
-
-		//String token = auth.split(" ")[1];
-		String token = auth.replaceFirst("^Bearer ", "");
-		if (token == null)
-			throw new LoginException(ErrorCodeEnum.INPUT_PARAM_REQUIRED_ERROR.toString(), "Debe incluir los parametros de Login");
-				
-		return token;	
-	}
 }

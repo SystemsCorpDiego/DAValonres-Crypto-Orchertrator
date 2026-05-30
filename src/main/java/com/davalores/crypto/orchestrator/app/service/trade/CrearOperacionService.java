@@ -34,11 +34,9 @@ public class CrearOperacionService implements CrearOperacionPortIn {
 	
 	
 	@Override
-	public Operacion run(String authToken, CrearOperacion dto) {
+	public Operacion run(Usuario usuarioLogin, CrearOperacion dto) {
 		// TODO sacar usuarioId del token, recuperar ripio_id del usuario,  y luego llamar a Ripio para crear la operacion
-		log.debug("inputParam -> authToken: {} - dto: {}", authToken, dto);
-		
-		Usuario usuarioLogin = getTokenUsuarioService.run(authToken, TokenTipoEnum.NORMAL);		
+		log.debug("inputParam -> usuarioLogin: {} - dto: {}", usuarioLogin, dto);
 		
 		if ( usuarioLogin.getRipioId() == null )
 			throw new BusinessException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "El usuario no tiene asociado un RipioId");

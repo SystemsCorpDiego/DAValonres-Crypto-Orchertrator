@@ -26,7 +26,6 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 	private final CypherServiceAdapterOut cypherService;
 	private final QrCodeServicePortOut qrCodeService;
 	private final UsuarioJpaRepositoryAdapterOut usuarioRepository;
-	private final GetLoginTokenUsuarioId getLoginTokenUsuarioId;
 
 	
 	public CrearDfaTokenService(CypherServiceAdapterOut cypherService, 
@@ -36,7 +35,6 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 		this.cypherService = cypherService;
 		this.qrCodeService = qrCodeService;
 		this.usuarioRepository = usuarioRepository;
-		this.getLoginTokenUsuarioId = getLoginTokenUsuarioId;
 		this.issuer = issuer;		
 	}
 	
@@ -66,19 +64,6 @@ public class CrearDfaTokenService implements CrearDfaTokenPortIn {
 		return dfaToken;
 	}
 	
-	
-	@Override
-	public DfaToken run(String token) {
-		log.debug("inputParam -> {}", token);
-		
-	
-		Integer usuarioId = getLoginTokenUsuarioId.run(token);
-		
-		log.debug("outputParam -> {}", usuarioId);
-		return run( usuarioId );
-	}
-	
-
 	private String generateSecretKey() {
 		SecureRandom random = new SecureRandom();
 		byte[] bytes = new byte[20];

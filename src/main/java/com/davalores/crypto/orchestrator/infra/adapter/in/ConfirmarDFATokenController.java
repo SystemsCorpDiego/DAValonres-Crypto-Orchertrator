@@ -1,12 +1,13 @@
 package com.davalores.crypto.orchestrator.infra.adapter.in;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.ConfirmarDFATokenPortIn;
+import com.davalores.crypto.orchestrator.domain.model.Usuario;
+import com.davalores.crypto.orchestrator.infra.service.SessionLoginService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -28,13 +29,13 @@ public class ConfirmarDFATokenController {
 	 * Debe de tener una semilla creada 
 	 * */
 	
-	private final String tokenHeader;
+	private final SessionLoginService sessionLoginService;
 	private final ConfirmarDFATokenPortIn portIn;
 	
 	public ConfirmarDFATokenController(ConfirmarDFATokenPortIn portIn,
-			@Value("${login.token.header}") String tokenHeader) {
+			SessionLoginService sessionLoginService) {
 		this.portIn = portIn;
-		this.tokenHeader = tokenHeader;
+		this.sessionLoginService = sessionLoginService;
 	}
 	
 	
@@ -44,10 +45,11 @@ public class ConfirmarDFATokenController {
 	@PutMapping("/habilitar")
 	public ResponseEntity<?> habilitar(HttpServletRequest request) {		
 		log.debug("inputParam -> ");
-		String token = getAuthToken(request);
-		log.debug("run -> token: {}", token);
+		
+		Usuario usuarioLogin = sessionLoginService.getUsuario(request);		
+		log.debug("run -> usuarioLogin: {}", usuarioLogin);
 
-		portIn.run(token, false);
+		portIn.run(usuarioLogin.getId(), false);
 		
 		log.debug("outputParam -> return: null");
 		return ResponseEntity.ok(null);
@@ -57,23 +59,13 @@ public class ConfirmarDFATokenController {
 	public ResponseEntity<?> deshabilitar(HttpServletRequest request) {
 		log.debug("run -> ");
 
-		String token = getAuthToken(request);
-		log.debug("run -> token: {}", token);
+		Usuario usuarioLogin = sessionLoginService.getUsuario(request);		
+		log.debug("run -> usuarioLogin: {}", usuarioLogin);
 		
-		portIn.run(token, true);
+		portIn.run(usuarioLogin.getId(), true);
 		
 		log.debug("run -> return: null");
 		return ResponseEntity.ok(null);
-	}
-	
-	
-	private String getAuthToken(HttpServletRequest request) {
-		// recupero token del header Authorization
-		String auth = request.getHeader( tokenHeader );
-		//String token = auth.split(" ")[1];
-		String token = auth.replaceFirst("^Bearer ", "");
-		
-		return token;		
 	}
 	
 }

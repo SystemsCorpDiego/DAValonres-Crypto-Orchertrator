@@ -3,6 +3,7 @@ package com.davalores.crypto.orchestrator.app.service.login;
 import org.springframework.stereotype.Service;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.ConfirmarDFATokenPortIn;
+import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.infra.adapter.out.UsuarioJpaRepositoryAdapterOut;
 
 import lombok.extern.slf4j.Slf4j;

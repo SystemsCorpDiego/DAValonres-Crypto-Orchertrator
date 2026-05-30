@@ -1,6 +1,5 @@
 package com.davalores.crypto.orchestrator.infra.adapter.in;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,11 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.davalores.crypto.orchestrator.app.port.in.trade.CrearOperacionPortIn;
 import com.davalores.crypto.orchestrator.domain.model.CrearOperacion;
 import com.davalores.crypto.orchestrator.domain.model.Operacion;
+import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.CrearOperacionDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.OperacionDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.OperacionMapper;
+import com.davalores.crypto.orchestrator.infra.service.SessionLoginService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -31,13 +32,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/providers/operacion")
 public class CrearOperacionController {
 
-	private final String tokenHeader;
+	private final SessionLoginService sessionLoginService;
 	private final CrearOperacionPortIn portIn;
 	private final OperacionMapper mapper;
 	
 	public CrearOperacionController(
-			@Value("${login.token.header}") String tokenHeader, CrearOperacionPortIn portIn, OperacionMapper mapper) {
-		this.tokenHeader = tokenHeader;
+			SessionLoginService sessionLoginService, CrearOperacionPortIn portIn, OperacionMapper mapper) {
+		this.sessionLoginService = sessionLoginService;
 		this.portIn = portIn;
 		this.mapper = mapper;
 	}
@@ -74,23 +75,15 @@ public class CrearOperacionController {
 		if ( dto.getIdExternoProveedorCotizacion() == null )
 			throw new BusinessException("Debe indicar un id de cotización");
 		
-		String authToken = getAuthToken(request);
+		Usuario usuarioLogin = sessionLoginService.getUsuario(request);
 		
 		CrearOperacion reg = mapper.run(dto);		
-		Operacion operacion = portIn.run( authToken, reg );		
+		Operacion operacion = portIn.run( usuarioLogin, reg );		
 		OperacionDto response = mapper.run(operacion);
 		
 		log.debug("outParam -> {}", response);
 		return ResponseEntity.ok(response);
 	}
 	
-	private String getAuthToken(HttpServletRequest request) {
-		// recupero token del header Authorization
-		String auth = request.getHeader( tokenHeader );
-		//String token = auth.split(" ")[1];
-		String token = auth.replaceFirst("^Bearer ", "");
-		
-		return token;		
-	}
 	
 }

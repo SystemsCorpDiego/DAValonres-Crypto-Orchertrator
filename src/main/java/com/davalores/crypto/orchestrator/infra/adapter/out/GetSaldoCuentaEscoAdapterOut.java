@@ -136,9 +136,7 @@ public class GetSaldoCuentaEscoAdapterOut implements GetSaldoCuentaEscoPortOut {
 			if ( lstSaldoCuentaEscoDto != null && lstSaldoCuentaEscoDto.length>0 ) {
 				for (SaldoCuentaEscoDto reg : lstSaldoCuentaEscoDto) {
 				    log.debug("SaldoCuentaEscoDto: {}", reg);
-				    if ( reg.getAbreviatura().equals("$") &&
-				    		reg.getMoneda().equals("Pesos") &&
-				    		reg.getDescripcion().equals("Pesos") ) {
+				    if ( reg.getTpActivo().equals("Pesos") && reg.getTpInstrumento().equals("##SALDOSMON##") ) {
 				    	saldo = reg;
 				    }
 				}

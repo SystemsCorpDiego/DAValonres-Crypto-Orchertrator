@@ -1,6 +1,5 @@
 package com.davalores.crypto.orchestrator.infra.adapter.in;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,8 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.davalores.crypto.orchestrator.app.port.in.login.CrearDfaTokenPortIn;
 import com.davalores.crypto.orchestrator.domain.model.DfaToken;
+import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.infra.adapter.in.dto.DfaTokenDto;
 import com.davalores.crypto.orchestrator.infra.adapter.in.mapper.DfaTokenMapper;
+import com.davalores.crypto.orchestrator.infra.service.SessionLoginService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,20 +28,19 @@ import lombok.extern.slf4j.Slf4j;
 public class CrearDFATokenController {
 	
 	/*
-	 * Crea una semilla de DFA en formato QR y URL para el usuario logueado.
+	 * Crea una semilla de DFA en formato QR y URL para el usuario logueado. 
 	 * 
 	 */
-
-	private final String tokenHeader;
+	private final SessionLoginService sessionLoginService;
 	private final CrearDfaTokenPortIn portIn;
 	private final DfaTokenMapper mapper;
 
 	public CrearDFATokenController(CrearDfaTokenPortIn portIn, 
 			DfaTokenMapper mapper,
-			@Value("${login.token.header}") String tokenHeader) {
+			SessionLoginService sessionLoginService) {
 		this.portIn = portIn;
 		this.mapper = mapper;
-		this.tokenHeader = tokenHeader;
+		this.sessionLoginService = sessionLoginService;
 	}
 	
 	
@@ -50,24 +50,16 @@ public class CrearDFATokenController {
 	public ResponseEntity<DfaTokenDto> run(HttpServletRequest request) {
 		log.debug("inputParam -> ");
 		
-		String token = getAuthToken(request);
-		log.debug("run -> {}", token);		
+		Usuario usuarioLogin = sessionLoginService.getUsuario(request);
+		log.debug("run -> {}", usuarioLogin);		
 		
-		DfaToken dfaToken = portIn.run(token);
+		DfaToken dfaToken = portIn.run(usuarioLogin.getId());
 		DfaTokenDto response = mapper.run(dfaToken);
 		
 		log.debug("outputParam -> {}", response);		
 		return ResponseEntity.ok(response);
 	}
 
-	private String getAuthToken(HttpServletRequest request) {
-		// recupero token del header Authorization
-		String auth = request.getHeader( tokenHeader );
-		//String token = auth.split(" ")[1];
-		String token = auth.replaceFirst("^Bearer ", "");
-		
-		return token;
-		
-	}
+	 
 	
 }
