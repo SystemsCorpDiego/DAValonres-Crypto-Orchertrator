@@ -1,4 +1,4 @@
-package com.davalores.crypto.orchestrator.infra.adapter.out;
+package com.davalores.crypto.orchestrator.infra.adapter.out.dto;
 
 public class DetalleCuentaEscoDataDto {
 	

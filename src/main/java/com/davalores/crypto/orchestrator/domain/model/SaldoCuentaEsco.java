@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 
 public class SaldoCuentaEsco {
 
-	private String comitente;
+	private Long comitente;
 	private BigDecimal cantidad;
 	
 	
-	public String getComitente() {
+	public Long getComitente() {
 		return comitente;
 	}
-	public void setComitente(String comitente) {
+	public void setComitente(Long comitente) {
 		this.comitente = comitente;
 	}
 	public BigDecimal getCantidad() {

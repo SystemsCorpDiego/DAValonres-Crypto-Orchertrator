@@ -1,7 +1,6 @@
-package com.davalores.crypto.orchestrator.infra.adapter.out;
+package com.davalores.crypto.orchestrator.infra.adapter.out.dto;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public class SaldoCuentaEscoDto {
 

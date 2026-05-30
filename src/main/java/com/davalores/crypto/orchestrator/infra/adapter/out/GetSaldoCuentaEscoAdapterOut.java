@@ -16,10 +16,15 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import com.davalores.crypto.orchestrator.app.port.out.CypherServicePortOut;
 import com.davalores.crypto.orchestrator.app.port.out.GetSaldoCuentaEscoPortOut;
+import com.davalores.crypto.orchestrator.app.port.out.LoginEscoBolsaPortOut;
 import com.davalores.crypto.orchestrator.domain.model.SaldoCuentaEsco;
+import com.davalores.crypto.orchestrator.domain.model.Usuario;
+import com.davalores.crypto.orchestrator.domain.model.UsuarioEsco;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.SaldoCuentaEscoException;
+import com.davalores.crypto.orchestrator.infra.adapter.out.dto.SaldoCuentaEscoDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -31,6 +36,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class GetSaldoCuentaEscoAdapterOut implements GetSaldoCuentaEscoPortOut {
 
+	private final LoginEscoBolsaPortOut loginEscoBolsa;
+	private final CypherServicePortOut cypherServicePortOut;
+
 	private String protocolo; 
 	private String dominio; 
 	private String apiPath; 
@@ -40,17 +48,21 @@ public class GetSaldoCuentaEscoAdapterOut implements GetSaldoCuentaEscoPortOut {
 			@Value("${apis.esco-bolsa.protocolo}") String protocolo,
 			@Value("${apis.esco-bolsa.dominio}") String dominio, 
 			@Value("${apis.esco-bolsa.urls.tenencias}") String apiPath,
-			@Value("${apis.esco-bolsa.api-version}") String apiVersion) {
+			@Value("${apis.esco-bolsa.api-version}") String apiVersion,
+			LoginEscoBolsaPortOut loginEscoBolsa,
+			CypherServicePortOut cypherServicePortOut) {
 		super();
 		this.protocolo = protocolo;
 		this.dominio = dominio;
 		this.apiPath = apiPath;
 		this.apiVersion = apiVersion;
+		this.loginEscoBolsa = loginEscoBolsa;
+		this.cypherServicePortOut = cypherServicePortOut;
 	}
 
 	
 	@Override
-	public SaldoCuentaEsco run(String token, String comitente) {
+	public SaldoCuentaEsco run(String token, Long comitente) {
 		log.debug("inputParam -> token: {} ", token);
 		SaldoCuentaEsco saldoCuentaEsco = null;
 		
@@ -177,4 +189,19 @@ public class GetSaldoCuentaEscoAdapterOut implements GetSaldoCuentaEscoPortOut {
 		return sb.toString();
 	}
 
+
+	@Override
+	public SaldoCuentaEsco run(String usuario, String clave, Long comitente) {
+		UsuarioEsco usuarioEsco = loginEscoBolsa.run(usuario, clave);		
+		return run(usuarioEsco.getAccessToken(), comitente);
+	}
+
+
+	@Override
+	public SaldoCuentaEsco run(Usuario usuarioLogin, Long comitente) {
+		String clave = cypherServicePortOut.desencriptar(usuarioLogin.getClaveEsco());
+		return run(usuarioLogin.getUsuario(), clave, comitente);
+	}
+
+	
 }

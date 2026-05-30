@@ -1,14 +1,20 @@
 package com.davalores.crypto.orchestrator.app.service.trade;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Service;
 
 import com.davalores.crypto.orchestrator.app.port.in.trade.CrearOperacionPortIn;
+import com.davalores.crypto.orchestrator.app.port.out.CrearComprobantePagoEscoPortOut;
 import com.davalores.crypto.orchestrator.app.port.out.CrearOperacionRipioPortOut;
+import com.davalores.crypto.orchestrator.app.port.out.GetDetalleCuentaEscoPortOut;
+import com.davalores.crypto.orchestrator.app.port.out.GetSaldoCuentaEscoPortOut;
 import com.davalores.crypto.orchestrator.app.port.out.OperacionRepositoryPortOut;
-import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
-import com.davalores.crypto.orchestrator.app.service.usuario.GetTokenUsuarioService;
+import com.davalores.crypto.orchestrator.app.port.out.dto.CrearComprobantePagoEscoDto;
 import com.davalores.crypto.orchestrator.domain.model.CrearOperacion;
+import com.davalores.crypto.orchestrator.domain.model.DetalleCuentaEsco;
 import com.davalores.crypto.orchestrator.domain.model.Operacion;
+import com.davalores.crypto.orchestrator.domain.model.SaldoCuentaEsco;
 import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.BusinessException;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
@@ -21,15 +27,21 @@ public class CrearOperacionService implements CrearOperacionPortIn {
 
 	private final OperacionRepositoryPortOut operacionRepository;
 	private final CrearOperacionRipioPortOut crearOperacionRipioPortOut;
-	private final GetTokenUsuarioService getTokenUsuarioService;
+	private final CrearComprobantePagoEscoPortOut crearComprobantePagoEscoPortOut;
+	private final GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut;
+	private final GetSaldoCuentaEscoPortOut getSaldoCuentaEscoPortOut;
 	
 	public CrearOperacionService( 
 			CrearOperacionRipioPortOut crearOperacionRipioPortOut, 
 			OperacionRepositoryPortOut operacionRepository,
-			GetTokenUsuarioService getTokenUsuarioService) {
+			CrearComprobantePagoEscoPortOut crearComprobantePagoEscoPortOut,
+			GetDetalleCuentaEscoPortOut getDetalleCuentaEscoPortOut,
+			GetSaldoCuentaEscoPortOut getSaldoCuentaEscoPortOut) {
 		this.operacionRepository = operacionRepository;
 		this.crearOperacionRipioPortOut = crearOperacionRipioPortOut;
-		this.getTokenUsuarioService = getTokenUsuarioService;
+		this.crearComprobantePagoEscoPortOut = crearComprobantePagoEscoPortOut;
+		this.getDetalleCuentaEscoPortOut = getDetalleCuentaEscoPortOut;		
+		this.getSaldoCuentaEscoPortOut = getSaldoCuentaEscoPortOut;
 	}
 	
 	
@@ -43,13 +55,32 @@ public class CrearOperacionService implements CrearOperacionPortIn {
 		dto.setRipioId(usuarioLogin.getRipioId());
 		dto.setUsuarioId(usuarioLogin.getId());
 
+		//1) Recupero Cuenta ESCO
+		DetalleCuentaEsco detalleCuentaEsco = getDetalleCuentaEscoPortOut.run(usuarioLogin);
+
+		//TODO: validar Saldo: necesito el RATIO de la coti !!
+		SaldoCuentaEsco saldoCuentaEsco = getSaldoCuentaEscoPortOut.run(usuarioLogin, detalleCuentaEsco.getComitente());
+		
+		
+		
 		Operacion operacion = crearOperacionRipioPortOut.run(dto);
+		
+		
+		
+		CrearComprobantePagoEscoDto comprobante = new CrearComprobantePagoEscoDto();
+		BigDecimal importe = operacion.getActivoCotiCantidad().multiply(operacion.getRatio());
+		comprobante.setImporte(importe);
+		comprobante.setMoneda(operacion.getActivoCoti());
+		
+		comprobante.setCuenta(detalleCuentaEsco.getComitente());
+		comprobante.setCodCtaBancariaComitente(null); //TODO: ver esto !!!
+		
+		crearComprobantePagoEscoPortOut.run(comprobante);
 		
 		operacion = operacionRepository.save(operacion);
 		
 		log.debug("outputParam -> {}", operacion);
 		return operacion;
 	}
-	
 	
 }

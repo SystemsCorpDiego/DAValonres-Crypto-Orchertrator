@@ -41,6 +41,7 @@ apis:
            cliente-alta: /cripto-provider/ripio/cliente/
            cotizacion-alta: /cripto-provider/ripio/cotizacion/
            operacion-alta: /cripto-provider/ripio/operacion/
+           cotizacion-consul: /cripto-provider/ripio/cotizacion/
 login:
    token:
       header: Authorization

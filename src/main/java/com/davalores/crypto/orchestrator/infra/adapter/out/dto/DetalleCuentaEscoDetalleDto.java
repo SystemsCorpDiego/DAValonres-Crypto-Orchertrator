@@ -1,14 +1,15 @@
-package com.davalores.crypto.orchestrator.infra.adapter.out;
+package com.davalores.crypto.orchestrator.infra.adapter.out.dto;
 
 public class DetalleCuentaEscoDetalleDto {
-	private String numComitente;
+	private Long numComitente;
 	private String descComitente;
 	private String cuit;
 	
-	public String getNumComitente() {
+	
+	public Long getNumComitente() {
 		return numComitente;
 	}
-	public void setNumComitente(String numComitente) {
+	public void setNumComitente(Long numComitente) {
 		this.numComitente = numComitente;
 	}
 	public String getDescComitente() {

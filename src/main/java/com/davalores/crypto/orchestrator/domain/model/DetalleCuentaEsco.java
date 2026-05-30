@@ -1,15 +1,16 @@
 package com.davalores.crypto.orchestrator.domain.model;
 
 public class DetalleCuentaEsco {
-	private String comitente;
+	private Long comitente;
 	private String comitenteDescripcion;		
 	private String cuit;
 	
 	
-	public String getComitente() {
+	
+	public Long getComitente() {
 		return comitente;
 	}
-	public void setComitente(String comitente) {
+	public void setComitente(Long comitente) {
 		this.comitente = comitente;
 	}
 	public String getComitenteDescripcion() {
