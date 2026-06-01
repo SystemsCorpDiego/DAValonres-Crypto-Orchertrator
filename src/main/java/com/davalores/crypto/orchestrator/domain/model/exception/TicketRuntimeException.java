@@ -14,6 +14,7 @@ public abstract class TicketRuntimeException extends RuntimeException  implement
 	private String codeWebsite = "DAVMW";
 	public String codigo;
 	public String descripcion;
+	private String statusString;
 
 	private Integer nroTicket;
 	private LocalDateTime date;
@@ -73,6 +74,15 @@ public abstract class TicketRuntimeException extends RuntimeException  implement
         generarTicket();
 	}
 	
+	public TicketRuntimeException(String statusString, String codigo, String descripcion) {
+		super();
+		this.statusString = statusString;
+		this.codigo = codigo;
+		this.descripcion = descripcion;
+		
+        generarTicket();
+	}
+	
 	public TicketRuntimeException(String message) {
         super(message);
         this.descripcion = message;
@@ -125,9 +135,10 @@ public abstract class TicketRuntimeException extends RuntimeException  implement
 
 	@Override
 	public String toString() {
-		return "TicketRuntimeException [getTicketError()=" + getTicketError() + ", codeWebsite=" + codeWebsite + ", codigo=" + codigo + ", descripcion="
-				+ descripcion + ", nroTicket=" + nroTicket + ", date=" + date 
-				+ "]";
+		return "TicketRuntimeException [codeWebsite=" + codeWebsite + ", codigo=" + codigo + ", descripcion="
+				+ descripcion + ", statusString=" + statusString + ", nroTicket=" + nroTicket + ", date=" + date + "]";
 	}
+
+
 	
 }

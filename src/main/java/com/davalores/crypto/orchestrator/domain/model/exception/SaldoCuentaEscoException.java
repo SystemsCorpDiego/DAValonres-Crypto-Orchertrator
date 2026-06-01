@@ -12,6 +12,10 @@ public class SaldoCuentaEscoException extends TicketRuntimeException {
 		super(codigo, descripcion, e);
 	}
 	
+	public SaldoCuentaEscoException(String status, String codigo, String descripcion) {
+		super(status, codigo, descripcion);		
+	}
+	
 	@Override
 	public String getErrorType() {
 		// TODO Auto-generated method stub

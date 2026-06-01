@@ -16,6 +16,7 @@ import com.davalores.crypto.orchestrator.app.port.out.LoginEscoBolsaPortOut;
 import com.davalores.crypto.orchestrator.domain.model.UsuarioEsco;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
+import com.davalores.crypto.orchestrator.domain.model.exception.SaldoCuentaEscoException;
 import com.davalores.crypto.orchestrator.infra.adapter.out.mapper.LoginEscoDtoDynamicAliasIntrospector;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -80,8 +81,12 @@ public class LoginEscoBolsaAdapterOut implements LoginEscoBolsaPortOut {
 		    throw new LoginException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
-			log.error("HTTP Error: " + e.getStatusCode());
-			throw new LoginException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			log.error("HTTP Error: " + e.getStatusCode());			
+			if ( e.getStatusCode().is5xxServerError() ) {
+				throw new LoginException(""+e.getStatusCode().value(), ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl  + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			} else {
+				throw new LoginException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			}						
 		} catch (Exception e) {
 			log.error("ERROR-INESPERADO: " + e.toString());
 			throw new LoginException(ErrorCodeEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());

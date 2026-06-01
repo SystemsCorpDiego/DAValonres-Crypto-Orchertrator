@@ -68,7 +68,7 @@ public class CrearOperacionController {
 	}
 	
 	private ResponseEntity<OperacionDto> run(HttpServletRequest request, CrearOperacionDto dto ) {
-		log.debug("inputParam -> {}", dto);
+		log.debug("input -> {}", dto);
 		
 		if ( dto.getCantidad() == null )
 			throw new BusinessException("Debe indicar una cantidad");
@@ -81,7 +81,7 @@ public class CrearOperacionController {
 		Operacion operacion = portIn.run( usuarioLogin, reg );		
 		OperacionDto response = mapper.run(operacion);
 		
-		log.debug("outParam -> {}", response);
+		log.debug("output -> {}", response);
 		return ResponseEntity.ok(response);
 	}
 	

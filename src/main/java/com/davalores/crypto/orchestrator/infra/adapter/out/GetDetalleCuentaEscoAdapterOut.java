@@ -99,8 +99,13 @@ public class GetDetalleCuentaEscoAdapterOut implements GetDetalleCuentaEscoPortO
 		    throw new DetalleCuentaEscoException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
-			log.error("HTTP Error: " + e.getStatusCode());
-			throw new DetalleCuentaEscoException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			log.error("HTTP Error: " + e.getStatusCode());			
+			if ( e.getStatusCode().is5xxServerError() ) {
+				throw new DetalleCuentaEscoException(""+e.getStatusCode().value(), ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl  + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			} else {
+				throw new DetalleCuentaEscoException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			}
+			
 		} catch (Exception e) {
 			log.error("ERROR-INESPERADO: " + e.toString());
 			throw new DetalleCuentaEscoException(ErrorCodeEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());

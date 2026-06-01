@@ -128,7 +128,11 @@ public class GetSaldoCuentaEscoAdapterOut implements GetSaldoCuentaEscoPortOut {
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
 			log.error("HTTP Error: " + e.getStatusCode());
-			throw new SaldoCuentaEscoException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			if ( e.getStatusCode().is5xxServerError() ) {
+				throw new SaldoCuentaEscoException(""+e.getStatusCode().value(), ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl  + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			} else {
+				throw new SaldoCuentaEscoException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			}			
 		} catch (Exception e) {
 			log.error("ERROR-INESPERADO: " + e.toString());
 			throw new SaldoCuentaEscoException(ErrorCodeEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());

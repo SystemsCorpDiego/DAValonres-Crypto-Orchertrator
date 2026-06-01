@@ -12,6 +12,7 @@ public class Operacion {
 	
 	String quoteId;	
 	String cotizacionId; 		//id de la Cotizacion usada en la Operacion
+	
 	String trxIdExternoProveedor;
 	String idExternoCliente;
 	BigDecimal ratio;
@@ -32,7 +33,8 @@ public class Operacion {
 	
 	String tipo;       		// "BUY" o "SELL"   => informado por Ripio (RipioWebHookMessageOpResultDto.op_type)
 	        				// PK del cliente en DA Valores 
-
+	
+	Long idComprobanteEsco; //id_comprobante_esco 
 
 	//TODO: Cuando se analice VisualBolsa vemos que datos registramos de las transacciones 
 	// RESERVA/EXTRACCION y DEPOSITO.-
@@ -238,6 +240,16 @@ public class Operacion {
 	}
 
 
+	public Long getIdComprobanteEsco() {
+		return idComprobanteEsco;
+	}
+
+
+	public void setIdComprobanteEsco(Long idComprobanteEsco) {
+		this.idComprobanteEsco = idComprobanteEsco;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Operacion [id=" + id + ", idExterno=" + idExterno + ", idExternoProveedor=" + idExternoProveedor
@@ -247,10 +259,7 @@ public class Operacion {
 				+ ", activoBase=" + activoBase + ", activoCoti=" + activoCoti + ", activoCotiCantidad="
 				+ activoCotiCantidad + ", activoBaseCantidad=" + activoBaseCantidad + ", proveedor=" + proveedor
 				+ ", usuarioId=" + usuarioId + ", creadoEnProveedor=" + creadoEnProveedor + ", creadoEn=" + creadoEn
-				+ ", tipo=" + tipo + "]";
+				+ ", tipo=" + tipo + ", idComprobanteEsco=" + idComprobanteEsco + "]";
 	}
 
- 
-	
-	
 }

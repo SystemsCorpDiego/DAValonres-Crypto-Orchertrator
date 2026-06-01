@@ -12,6 +12,10 @@ public class OperacionException extends TicketRuntimeException {
 		super(codigo, message);
 	}
 
+	public OperacionException(String status, String codigo, String descripcion) {
+		super(status, codigo, descripcion);		
+	}
+	
 	@Override
 	public String getErrorType() {
 		return ErrorTypeEnum.OPERATION_ERROR.name();

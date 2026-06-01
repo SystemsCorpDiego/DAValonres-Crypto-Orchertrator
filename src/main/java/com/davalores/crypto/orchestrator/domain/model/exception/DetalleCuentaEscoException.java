@@ -12,7 +12,9 @@ public class DetalleCuentaEscoException extends TicketRuntimeException {
 		super(codigo, message);
 	}
 
-
+	public DetalleCuentaEscoException(String status, String codigo, String descripcion) {
+		super(status, codigo, descripcion);		
+	}
 	
 	@Override
 	public String getErrorType() {

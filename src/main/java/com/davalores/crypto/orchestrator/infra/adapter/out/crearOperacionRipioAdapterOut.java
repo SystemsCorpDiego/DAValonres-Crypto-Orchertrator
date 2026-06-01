@@ -15,9 +15,12 @@ import org.springframework.web.client.RestTemplate;
 import com.davalores.crypto.orchestrator.app.port.out.CrearOperacionRipioPortOut;
 import com.davalores.crypto.orchestrator.domain.model.CrearOperacion;
 import com.davalores.crypto.orchestrator.domain.model.Operacion;
+import com.davalores.crypto.orchestrator.domain.model.exception.CotizacionException;
 import com.davalores.crypto.orchestrator.domain.model.exception.CustomProblemDetail;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.OperacionException;
+import com.davalores.crypto.orchestrator.infra.adapter.out.dto.OperationResponseDto;
+import com.davalores.crypto.orchestrator.infra.adapter.out.mapper.OperationResponseDtoMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -33,19 +36,22 @@ public class crearOperacionRipioAdapterOut implements CrearOperacionRipioPortOut
 	private final String protocolo; 
 	private final String dominio; 
 	private final String apiPath; 
+	private final OperationResponseDtoMapper mapper;
 	
 	public crearOperacionRipioAdapterOut(
 			@Value("${apis.crypto-provider.ripio.protocolo}") String protocolo,
 			@Value("${apis.crypto-provider.ripio.dominio}") String dominio,
-			@Value("${apis.crypto-provider.ripio.urls.operacion-alta}") String apiPath) {
+			@Value("${apis.crypto-provider.ripio.urls.operacion-alta}") String apiPath,
+			OperationResponseDtoMapper mapper)  {
 		this.protocolo = protocolo;
 		this.dominio = dominio;
 		this.apiPath = apiPath;
+		this.mapper = mapper;
 	}
 	
 	@Override
-	public Operacion run(CrearOperacion dto) {
-        log.debug("inputParam -> {}", dto);		
+	public Operacion run(CrearOperacion dto) { 
+        log.debug("input -> {}", dto);		
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON); 
@@ -95,8 +101,13 @@ public class crearOperacionRipioAdapterOut implements CrearOperacionRipioPortOut
 		catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
 			log.error("HTTP Error: " + e.getStatusCode());
-			//throw new LoginException("4xx / 5xx", "crearOperacionRipioAdapterOut() - HTTP Error: " + e.getMessage() );
-			throw new OperacionException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			//throw new LoginException("4xx / 5xx", "crearOperacionRipioAdapterOut() - HTTP Error: " + e.getMessage() );			
+			if ( e.getStatusCode().is5xxServerError() ) {
+				throw new OperacionException(""+e.getStatusCode().value(), ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl  + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			} else {
+				throw new OperacionException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			}
+			
 		} catch (Exception e) {
 			log.error("ERROR-INESPERADO: " + e.toString());			
 			throw new OperacionException(ErrorCodeEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());
@@ -113,13 +124,22 @@ public class crearOperacionRipioAdapterOut implements CrearOperacionRipioPortOut
 			//jsonMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); 
 			jsonMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
 			
-			Operacion operacion = jsonMapper.readValue(response.getBody(), Operacion.class); 
+			//Operacion operacion = jsonMapper.readValue(response.getBody(), Operacion.class); 
+			
+			OperationResponseDto operationResponse = jsonMapper.readValue(response.getBody(), OperationResponseDto.class);
+			log.debug("XXX - operationResponse: {}", operationResponse);
+			Operacion operacion = mapper.run(operationResponse);
+			log.debug("XXX - operacion: {}", operacion);
+			
+			
 			operacion.setUsuarioId(dto.getUsuarioId());
 			operacion.setCotizacionId(dto.getCotizacionId());
+			operacion.setTipo(dto.getTipo());
+			
 			
 			//LoginTokenRipio dto = mapper.run(tokenDto);	
 			
-			log.debug("outputParam -> {}", operacion);
+			log.debug("output -> {}", operacion);
 			return operacion;			
 		} catch (JsonMappingException e) {
 			log.error("JsonMappingException: " + e.getMessage());

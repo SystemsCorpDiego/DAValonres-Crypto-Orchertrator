@@ -43,5 +43,7 @@ public class OperacionEntity {
 	String creadoEnProveedor;
 	LocalDateTime creadoEn;
 
-	
+	@Column(name = "id_comprobante_esco")
+	Long idComprobanteEsco; 
+
 }

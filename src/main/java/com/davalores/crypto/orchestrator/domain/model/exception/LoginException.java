@@ -7,7 +7,11 @@ public class LoginException extends TicketRuntimeException {
 	public LoginException(String codigo, String descripcion) {
         super(codigo, descripcion);
     }
-
+	
+	public LoginException(String status, String codigo, String descripcion) {
+		super(status, codigo, descripcion);		
+	}
+	
 	@Override
 	public String getErrorType() {
 		return ErrorTypeEnum.LOGIN_ERROR.getType();

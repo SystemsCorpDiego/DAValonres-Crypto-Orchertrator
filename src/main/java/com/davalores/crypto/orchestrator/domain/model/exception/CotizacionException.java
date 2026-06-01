@@ -11,7 +11,11 @@ public class CotizacionException extends TicketRuntimeException {
 	public CotizacionException(String codigo, String message) {
 		super(codigo, message);
 	}
-
+	
+	public CotizacionException(String status, String codigo, String descripcion) {
+		super(status, codigo, descripcion);		
+	}
+	
 	@Override
 	public String getErrorType() {
 		return ErrorTypeEnum.QUOTE_ERROR.name();

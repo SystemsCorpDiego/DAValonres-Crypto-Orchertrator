@@ -48,7 +48,7 @@ public class CrearCotizacionAdapterOut implements CrearCotizacionPortOut {
 
 	
 	public Cotizacion run(CotizacionSolicitud solicitud) {
-		log.debug("inputParam -> {}", solicitud);
+		log.debug("input -> {}", solicitud);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON); 
@@ -79,8 +79,12 @@ public class CrearCotizacionAdapterOut implements CrearCotizacionPortOut {
 		    throw new CotizacionException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
-			log.error("HTTP Error: " + e.getStatusCode());
-			throw new CotizacionException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			log.error("HTTP Error: " + e.getStatusCode());			
+			if ( e.getStatusCode().is5xxServerError() ) {
+				throw new CotizacionException(""+e.getStatusCode().value(), ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + buildUrl()  + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			} else {
+				throw new CotizacionException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			}
 		} catch (Exception e) {
 			log.error("ERROR-INESPERADO: " + e.toString());
 			throw new CotizacionException(ErrorCodeEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());

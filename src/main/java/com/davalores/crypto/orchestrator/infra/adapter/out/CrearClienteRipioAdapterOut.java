@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import com.davalores.crypto.orchestrator.app.port.out.CrearClienteRipioPortOut;
 import com.davalores.crypto.orchestrator.domain.model.ClienteRipio;
 import com.davalores.crypto.orchestrator.domain.model.exception.ClienteRipioException;
+import com.davalores.crypto.orchestrator.domain.model.exception.CotizacionException;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.domain.model.exception.OperacionException;
@@ -62,8 +63,12 @@ public class CrearClienteRipioAdapterOut implements CrearClienteRipioPortOut {
 		    throw new ClienteRipioException(ErrorCodeEnum.CONFIGURATION_ERROR.toString(), "Resource not found: " + apiUrl );
 		} catch (HttpStatusCodeException e) {
 		    // Handle other HTTP errors (4xx or 5xx)
-			log.error("HTTP Error: " + e.getStatusCode());
-			throw new ClienteRipioException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			log.error("HTTP Error: " + e.getStatusCode());			
+			if ( e.getStatusCode().is5xxServerError() ) {
+				throw new ClienteRipioException(""+e.getStatusCode().value(), ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + buildUrl()  + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			} else {
+				throw new ClienteRipioException(ErrorCodeEnum.HTTP_ERROR.toString(), "HTTP Error: " + e.getStatusCode() +" Url: " + apiUrl + " RequestBody: " + request + " ResponseBody: " + response + " Error Msg: " + e.getMessage() );
+			}
 		} catch (Exception e) {
 			log.error("ERROR-INESPERADO: " + e.toString());
 			throw new ClienteRipioException(ErrorCodeEnum.UNEXPECTED_ERROR.toString(), "Error Msg: " + e.toString());

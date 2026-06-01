@@ -12,6 +12,10 @@ public class ClienteRipioException extends TicketRuntimeException {
 		super(codigo, message);
 	}
 
+	public ClienteRipioException(String status, String codigo, String descripcion) {
+		super(status, codigo, descripcion);		
+	}
+	
 	@Override
 	public String getErrorType() {
 		return ErrorTypeEnum.CLIENTE_ERROR.name();

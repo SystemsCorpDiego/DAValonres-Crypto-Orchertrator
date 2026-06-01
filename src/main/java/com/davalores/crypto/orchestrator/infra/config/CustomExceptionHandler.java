@@ -1,6 +1,7 @@
 package com.davalores.crypto.orchestrator.infra.config;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,7 +24,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		log.error("TicketRuntimeException - INIT");		
 		log.error("TicketRuntimeException - " + ex.toString());	
 		
-		HttpStatus status = HttpStatus.PRECONDITION_FAILED;
+		//HttpStatus status = HttpStatus.PRECONDITION_FAILED; //HTTP-412
+		HttpStatus status = HttpStatus.FORBIDDEN; //HTTP-403 Applicable when business rules specifically refuse a request
 		if ( ex instanceof LoginException ) {
 			status = HttpStatus.UNAUTHORIZED;
 		}
@@ -36,11 +38,18 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		}
 		
 		ProblemDetail problemDetail
-        	= ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, detalle);
+        	= ProblemDetail.forStatusAndDetail(status, detalle);
 		problemDetail.setProperty("ticket", ex.getTicketError());
 		problemDetail.setProperty("fecha", ex.getDate());
 		problemDetail.setProperty("tipo", ex.getErrorType());
 		problemDetail.setProperty("codigo", ex.getCodigo());
+		if ( ex.getStatusString() != null ) {
+			try {
+				HttpStatusCode statusCode = HttpStatusCode.valueOf(Integer.parseInt(ex.getStatusString()));
+				status = HttpStatus.resolve(statusCode.value());
+				problemDetail.setStatus(status);
+			} catch (Exception e) {}
+		}
 		
 		log.error("TicketRuntimeException - FIN");
 		return ResponseEntity.status(status).body(problemDetail);						

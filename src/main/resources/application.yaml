@@ -38,10 +38,11 @@ apis:
         protocolo: http
         dominio: localhost:8093
         urls:
-           cliente-alta: /cripto-provider/ripio/cliente/
-           cotizacion-alta: /cripto-provider/ripio/cotizacion/
-           operacion-alta: /cripto-provider/ripio/operacion/
-           cotizacion-consul: /cripto-provider/ripio/cotizacion/
+           cliente-alta: /cripto-provider/ripio/clientes/
+           cotizacion-alta: /cripto-provider/ripio/cotizaciones/
+           operacion-alta: /cripto-provider/ripio/operaciones/
+           cotizacion-consul: /cripto-provider/ripio/cotizaciones/
+validar-saldo: false
 login:
    token:
       header: Authorization
