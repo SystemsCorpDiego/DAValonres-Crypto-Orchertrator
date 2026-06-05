@@ -3,8 +3,6 @@ package com.davalores.crypto.orchestrator.infra.config;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import com.davalores.crypto.orchestrator.app.service.common.jwt.TokenTipoEnum;
 import com.davalores.crypto.orchestrator.app.service.usuario.GetTokenUsuarioService;
@@ -12,7 +10,6 @@ import com.davalores.crypto.orchestrator.domain.model.Usuario;
 import com.davalores.crypto.orchestrator.domain.model.exception.ErrorCodeEnum;
 import com.davalores.crypto.orchestrator.domain.model.exception.LoginException;
 import com.davalores.crypto.orchestrator.infra.service.SessionLoginService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -22,8 +19,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component
-@Order(1)
+//@Component
+//@Order(1)
 public class AuthFilter implements Filter {
 
     private String tokenHeader;
@@ -47,7 +44,8 @@ public class AuthFilter implements Filter {
 		
 		if ( httpRequest.getRequestURI().equals("/crypto/auth/login") ||
 				httpRequest.getRequestURI().equals("/crypto/auth/login/2fa") ||
-				httpRequest.getRequestURI().equals("/crypto/auth/login/token/refresh") ) {
+				httpRequest.getRequestURI().equals("/crypto/auth/login/token/refresh") ||
+				httpRequest.getRequestURI().equals("/crypto/swagger-ui/index.html") ) {
 			chain.doFilter(request, response);
             return; 
 		}
